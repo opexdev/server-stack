@@ -4,8 +4,8 @@ services:
     image: confluentinc/cp-zookeeper:latest
     hostname: zookeeper
     volumes:
-      - $DATA/zookeeper-data/data:/var/lib/zookeeper/data
-      - $DATA/zookeeper-data/tx-logs:/var/lib/zookeeper/log
+      - zookeeper-data:/var/lib/zookeeper/data
+      - zookeeper-log:/var/lib/zookeeper/log
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
       - ZOOKEEPER_CLIENT_PORT=2181
@@ -18,7 +18,7 @@ services:
     image: confluentinc/cp-kafka:latest
     hostname: kafka-1
     volumes:
-      - $DATA/kafka-data/kafka-1:/var/lib/kafka/data
+      - kafka-1:/var/lib/kafka/data
     environment:
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
       - ALLOW_PLAINTEXT_LISTENER=yes
@@ -39,7 +39,7 @@ services:
     image: confluentinc/cp-kafka:latest
     hostname: kafka-2
     volumes:
-      - $DATA/kafka-data/kafka-2:/var/lib/kafka/data
+      - kafka-2:/var/lib/kafka/data
     environment:
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
       - ALLOW_PLAINTEXT_LISTENER=yes
@@ -60,7 +60,7 @@ services:
     image: confluentinc/cp-kafka:latest
     hostname: kafka-3
     volumes:
-      - $DATA/kafka-data/kafka-3:/var/lib/kafka/data
+      - kafka-3:/var/lib/kafka/data
     environment:
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
       - ALLOW_PLAINTEXT_LISTENER=yes
@@ -95,8 +95,7 @@ services:
   vault:
     image: ghcr.io/opexdev/ghcr.io/opexdev/vault-opex
     volumes:
-      - $DATA/vault:/vault/file:rw
-      - ./resources/vault:/vault/config:rw
+      - vault-data:/vault/file
     environment:
       - VAULT_ADDRESS=http://0.0.0.0:8200
       - PANEL_PASS=${PANEL_PASS}
@@ -114,7 +113,6 @@ services:
       retries: 5
     cap_add:
       - IPC_LOCK
-    entrypoint: /vault/config/workflow-vault.sh
   vault-ui:
     image: djenriquez/vault-ui
     environment:
@@ -135,8 +133,7 @@ services:
     image: redis:alpine
     command: redis-server
     volumes:
-      - $DATA/redis-data:/var/lib/redis
-      - $DATA/redis.conf:/usr/local/etc/redis/redis.conf
+      - redis-data:/var/lib/redis
     environment:
       - REDIS_REPLICATION_MODE=master
     networks:
@@ -153,8 +150,7 @@ services:
       - POSTGRES_BACKUP_USER=${DB_BACKUP_USER:-opex_backup}
       - POSTGRES_BACKUP_PASSWORD=${DB_BACKUP_PASS:-hiopex}
     volumes:
-      - ./resources/postgres/init-backup-user.sh:/docker-entrypoint-initdb.d/init-backup-user.sh
-      - $DATA/accountant-data:/var/lib/postgresql/data/
+      - accountant-data:/var/lib/postgresql/data/
     networks:
       - default
   postgres-eventlog:
@@ -166,8 +162,7 @@ services:
       - POSTGRES_BACKUP_USER=${DB_BACKUP_USER:-opex_backup}
       - POSTGRES_BACKUP_PASSWORD=${DB_BACKUP_PASS:-hiopex}
     volumes:
-      - ./resources/postgres/init-backup-user.sh:/docker-entrypoint-initdb.d/init-backup-user.sh
-      - $DATA/eventlog-data:/var/lib/postgresql/data/
+      - eventlog-data:/var/lib/postgresql/data/
     networks:
       - default
   postgres-auth:
@@ -179,8 +174,7 @@ services:
       - POSTGRES_BACKUP_USER=${DB_BACKUP_USER:-opex_backup}
       - POSTGRES_BACKUP_PASSWORD=${DB_BACKUP_PASS:-hiopex}
     volumes:
-      - ./resources/postgres/init-backup-user.sh:/docker-entrypoint-initdb.d/init-backup-user.sh
-      - $DATA/auth-data:/var/lib/postgresql/data/
+      - auth-data:/var/lib/postgresql/data/
     networks:
       - default
     deploy:
@@ -195,8 +189,7 @@ services:
       - POSTGRES_BACKUP_USER=${DB_BACKUP_USER:-opex_backup}
       - POSTGRES_BACKUP_PASSWORD=${DB_BACKUP_PASS:-hiopex}
     volumes:
-      - ./resources/postgres/init-backup-user.sh:/docker-entrypoint-initdb.d/init-backup-user.sh
-      - $DATA/wallet-data:/var/lib/postgresql/data/
+      - wallet-data:/var/lib/postgresql/data/
     networks:
       - default
     deploy:
@@ -211,8 +204,7 @@ services:
       - POSTGRES_BACKUP_USER=${DB_BACKUP_USER:-opex_backup}
       - POSTGRES_BACKUP_PASSWORD=${DB_BACKUP_PASS:-hiopex}
     volumes:
-      - ./resources/postgres/init-backup-user.sh:/docker-entrypoint-initdb.d/init-backup-user.sh
-      - $DATA/api-data:/var/lib/postgresql/data/
+      - api-data:/var/lib/postgresql/data/
     networks:
       - default
     deploy:
@@ -227,8 +219,7 @@ services:
       - POSTGRES_BACKUP_USER=${DB_BACKUP_USER:-opex_backup}
       - POSTGRES_BACKUP_PASSWORD=${DB_BACKUP_PASS:-hiopex}
     volumes:
-      - ./resources/postgres/init-backup-user.sh:/docker-entrypoint-initdb.d/init-backup-user.sh
-      - $DATA/bc-gateway-data:/var/lib/postgresql/data/
+      - bc-gateway-data:/var/lib/postgresql/data/
     networks:
       - default
     deploy:
@@ -243,8 +234,7 @@ services:
       - POSTGRES_BACKUP_USER=${DB_BACKUP_USER:-opex_backup}
       - POSTGRES_BACKUP_PASSWORD=${DB_BACKUP_PASS:-hiopex}
     volumes:
-      - ./resources/postgres/init-backup-user.sh:/docker-entrypoint-initdb.d/init-backup-user.sh
-      - $DATA/referral-data:/var/lib/postgresql/data/
+      - referral-data:/var/lib/postgresql/data/
     deploy:
       restart_policy:
         condition: on-failure
@@ -448,7 +438,7 @@ services:
       - ROOT_DIR=/storage
       - SWAGGER_AUTH_URL=$KEYCLOAK_FRONTEND_URL
     volumes:
-      - $DATA/storage-data:/storage
+      - storage-data:/storage
     depends_on:
       - auth
       - consul
@@ -500,7 +490,7 @@ services:
       - BACKEND_USER=${BACKEND_USER}
       - SWAGGER_AUTH_URL=$KEYCLOAK_FRONTEND_URL
     volumes:
-      - $DATA/admin-data:/admin
+      - admin-data:/admin
     depends_on:
       - kafka-1
       - kafka-2
@@ -520,28 +510,27 @@ services:
       - POSTGRES_PASSWORD=${DB_PASS:-hiopex}
       - POSTGRES_DB=gateway
     volumes:
-      - $DATA/scan-gateway-data:/var/lib/postgresql/data/
+      - scan-gateway-data:/var/lib/postgresql/data/
     networks:
       - default
-    gateway:
-      build:
-        context: ./gateway
-      environment:
-        - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
-        - CONSUL_HOST=consul
-        - DB_IP_PORT=postgres-gateway
-        - BACKEND_USER=${BACKEND_USER}
-        - VAULT_HOST=vault
-      networks:
-        - default
-      depends_on:
-        - eth-scan
-        - bsc-scan
-        - bitcoin-scan
-        - postgres-gateway
-      deploy:
-        restart_policy:
-          condition: on-failure
+  gateway:
+    image: ghcr.io/opexdev/gateway
+    environment:
+      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      - CONSUL_HOST=consul
+      - DB_IP_PORT=postgres-gateway
+      - BACKEND_USER=${BACKEND_USER}
+      - VAULT_HOST=vault
+    networks:
+      - default
+    depends_on:
+      - eth-scan
+      - bsc-scan
+      - bitcoin-scan
+      - postgres-gateway
+    deploy:
+      restart_policy:
+        condition: on-failure
   eth-scan:
     image: ghcr.io/opexdev/eth-scan
     environment:
@@ -617,8 +606,7 @@ services:
       - POSTGRES_BACKUP_USER=${DB_BACKUP_USER:-opex_backup}
       - POSTGRES_BACKUP_PASSWORD=${DB_BACKUP_PASS:-hiopex}
     volumes:
-      - ./resources/postgres/init-backup-user.sh:/docker-entrypoint-initdb.d/init-backup-user.sh
-      - $DATA/opex-payment-data:/var/lib/postgresql/data/
+      - opex-payment-data:/var/lib/postgresql/data/
     networks:
       - default
   payment:
@@ -652,7 +640,7 @@ services:
   accountant-backup:
     image: prodrigestivill/postgres-backup-local
     volumes:
-      - $DATA/accountatn-backup:/backups
+      - accountatn-backup:/backups
     networks:
       - default
     environment:
@@ -670,7 +658,7 @@ services:
   auth-backup:
     image: prodrigestivill/postgres-backup-local
     volumes:
-      - $DATA/auth-backup:/backups
+      - auth-backup:/backups
     networks:
       - default
     environment:
@@ -688,7 +676,7 @@ services:
   wallet-backup:
     image: prodrigestivill/postgres-backup-local
     volumes:
-      - $DATA/wallet-backup:/backups
+      - wallet-backup:/backups
     networks:
       - default
     environment:
@@ -706,7 +694,7 @@ services:
   eventlog-backup:
     image: prodrigestivill/postgres-backup-local
     volumes:
-      - $DATA/eventlog-backup:/backups
+      - eventlog-backup:/backups
     networks:
       - default
     environment:
@@ -724,7 +712,7 @@ services:
   api-backup:
     image: prodrigestivill/postgres-backup-local
     volumes:
-      - $DATA/api-backup:/backups
+      - api-backup:/backups
     networks:
       - default
     environment:
@@ -742,7 +730,7 @@ services:
   bc-gateway-backup:
     image: prodrigestivill/postgres-backup-local
     volumes:
-      - $DATA/bc-gateway-backup:/backups
+      - bc-gateway-backup:/backups
     networks:
       - default
     environment:
@@ -760,7 +748,7 @@ services:
   payment-backup:
     image: prodrigestivill/postgres-backup-local
     volumes:
-      - $DATA/payment-backup:/backups
+      - payment-backup:/backups
     networks:
       - default
     environment:
@@ -778,7 +766,7 @@ services:
   referral-backup:
     image: prodrigestivill/postgres-backup-local
     volumes:
-      - $DATA/referral-backup:/backups
+      - referral-backup:/backups
     networks:
       - default
     environment:
@@ -802,7 +790,32 @@ services:
         condition: on-failure
 volumes:
   www:
-    external: false
+  zookeeper-data:
+  zookeeper-log:
+  kafka-1:
+  kafka-2:
+  kafka-3:
+  vault-data:
+  redis-data:
+  accountant-data:
+  eventlog-data:
+  auth-data:
+  wallet-data:
+  api-data:
+  bc-gateway-data:
+  referral-data:
+  storage-data:
+  admin-data:
+  scan-gateway-data:
+  opex-payment-data:
+  accountatn-backup:
+  auth-backup:
+  wallet-backup:
+  eventlog-backup:
+  api-backup:
+  bc-gateway-backup:
+  payment-backup:
+  referral-backup:
 networks:
   default:
     driver: overlay
