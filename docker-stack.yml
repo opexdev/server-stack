@@ -93,7 +93,7 @@ services:
       - kafka-2
       - kafka-3
   vault:
-    image: vault
+    image: ghcr.io/opexdev/ghcr.io/opexdev/vault-opex
     volumes:
       - $DATA/vault:/vault/file:rw
       - ./resources/vault:/vault/config:rw
@@ -145,7 +145,7 @@ services:
       restart_policy:
         condition: on-failure
   postgres-accountant:
-    image: postgres:14-alpine
+    image: ghcr.io/opexdev/postgres-opex
     environment:
       - POSTGRES_USER=${DB_USER:-opex}
       - POSTGRES_PASSWORD=${DB_PASS:-hiopex}
@@ -158,7 +158,7 @@ services:
     networks:
       - default
   postgres-eventlog:
-    image: postgres:14-alpine
+    image: ghcr.io/opexdev/postgres-opex
     environment:
       - POSTGRES_USER=${DB_USER:-opex}
       - POSTGRES_PASSWORD=${DB_PASS:-hiopex}
@@ -171,7 +171,7 @@ services:
     networks:
       - default
   postgres-auth:
-    image: postgres:14-alpine
+    image: ghcr.io/opexdev/postgres-opex
     environment:
       - POSTGRES_USER=${DB_USER:-opex}
       - POSTGRES_PASSWORD=${DB_PASS:-hiopex}
@@ -187,7 +187,7 @@ services:
       restart_policy:
         condition: on-failure
   postgres-wallet:
-    image: postgres:14-alpine
+    image: ghcr.io/opexdev/postgres-opex
     environment:
       - POSTGRES_USER=${DB_USER:-opex}
       - POSTGRES_PASSWORD=${DB_PASS:-hiopex}
@@ -203,7 +203,7 @@ services:
       restart_policy:
         condition: on-failure
   postgres-api:
-    image: postgres:14-alpine
+    image: ghcr.io/opexdev/postgres-opex
     environment:
       - POSTGRES_USER=${DB_USER:-opex}
       - POSTGRES_PASSWORD=${DB_PASS:-hiopex}
@@ -219,7 +219,7 @@ services:
       restart_policy:
         condition: on-failure
   postgres-bc-gateway:
-    image: postgres:14-alpine
+    image: ghcr.io/opexdev/postgres-opex
     environment:
       - POSTGRES_USER=${DB_USER:-opex}
       - POSTGRES_PASSWORD=${DB_PASS:-hiopex}
@@ -235,7 +235,7 @@ services:
       restart_policy:
         condition: on-failure
   postgres-referral:
-    image: postgres:14-alpine
+    image: ghcr.io/opexdev/postgres-opex
     environment:
       - POSTGRES_USER=${DB_USER:-opex}
       - POSTGRES_PASSWORD=${DB_PASS:-hiopex}
@@ -249,7 +249,7 @@ services:
       restart_policy:
         condition: on-failure
   accountant:
-    image: opexdev/accountant
+    image: ghcr.io/opexdev/accountant
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - SPRING_PROFILES_ACTIVE=scheduled
@@ -270,7 +270,7 @@ services:
       - vault
       - postgres-accountant
   eventlog:
-    image: opexdev/eventlog
+    image: ghcr.io/opexdev/eventlog
     environment:
       - JAVA_OPTS=-Xmx256m
       - KAFKA_IP_PORT=kafka-1:29092,kafka-2:29092,kafka-3:29092
@@ -288,7 +288,7 @@ services:
       - vault
       - postgres-eventlog
   matching-engine:
-    image: opexdev/matching-engine
+    image: ghcr.io/opexdev/matching-engine
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - KAFKA_IP_PORT=kafka-1:29092,kafka-2:29092,kafka-3:29092
@@ -301,7 +301,7 @@ services:
       - kafka-3
       - redis
   matching-gateway:
-    image: opexdev/matching-gateway
+    image: ghcr.io/opexdev/matching-gateway
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - KAFKA_IP_PORT=kafka-1:29092,kafka-2:29092,kafka-3:29092
@@ -316,7 +316,7 @@ services:
       - consul
       - matching-engine
   auth:
-    image: opexdev/user-management
+    image: ghcr.io/opexdev/user-management
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - KAFKA_IP_PORT=kafka-1:29092,kafka-2:29092,kafka-3:29092
@@ -343,7 +343,7 @@ services:
       restart_policy:
         condition: on-failure
   wallet:
-    image: opexdev/wallet
+    image: ghcr.io/opexdev/wallet
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - KAFKA_IP_PORT=kafka-1:29092,kafka-2:29092,kafka-3:29092
@@ -366,7 +366,7 @@ services:
       restart_policy:
         condition: on-failure
   api:
-    image: opexdev/api
+    image: ghcr.io/opexdev/api
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - KAFKA_IP_PORT=kafka-1:29092,kafka-2:29092,kafka-3:29092
@@ -394,7 +394,7 @@ services:
       restart_policy:
         condition: on-failure
   websocket:
-    image: opexdev/websocket
+    image: ghcr.io/opexdev/websocket
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - KAFKA_IP_PORT=kafka-1:29092,kafka-2:29092,kafka-3:29092
@@ -416,7 +416,7 @@ services:
       restart_policy:
         condition: on-failure
   bc-gateway:
-    image: opexdev/bc-gateway
+    image: ghcr.io/opexdev/bc-gateway
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - SPRING_PROFILES_DEFAULT=scheduled
@@ -441,7 +441,7 @@ services:
       restart_policy:
         condition: on-failure
   storage:
-    image: opexdev/storage
+    image: ghcr.io/opexdev/storage
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - CONSUL_HOST=consul
@@ -458,7 +458,7 @@ services:
       restart_policy:
         condition: on-failure
   referral:
-    image: opexdev/referral
+    image: ghcr.io/opexdev/referral
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=1044
       - CONSUL_HOST=consul
@@ -480,7 +480,7 @@ services:
       restart_policy:
         condition: on-failure
   captcha:
-    image: opexdev/captcha
+    image: ghcr.io/opexdev/captcha
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=1044
       - CONSUL_HOST=consul
@@ -491,7 +491,7 @@ services:
       restart_policy:
         condition: on-failure
   admin:
-    image: opexdev/admin
+    image: ghcr.io/opexdev/admin
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - KAFKA_IP_PORT=kafka-1:29092,kafka-2:29092,kafka-3:29092
@@ -514,7 +514,7 @@ services:
       restart_policy:
         condition: on-failure
   postgres-gateway:
-    image: postgres:14-alpine
+    image: ghcr.io/opexdev/postgres-opex
     environment:
       - POSTGRES_USER=${DB_USER:-opex}
       - POSTGRES_PASSWORD=${DB_PASS:-hiopex}
@@ -543,7 +543,7 @@ services:
         restart_policy:
           condition: on-failure
   eth-scan:
-    image: opexdev/eth-scan
+    image: ghcr.io/opexdev/eth-scan
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - CONSUL_HOST=consul
@@ -551,7 +551,7 @@ services:
     networks:
       - default
   bitcoin-scan:
-    image: opexdev/bitcoin-scan
+    image: ghcr.io/opexdev/bitcoin-scan
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - CONSUL_HOST=consul
@@ -561,7 +561,7 @@ services:
     networks:
       - default
   bsc-scan:
-    image: opexdev/eth-scan
+    image: ghcr.io/opexdev/eth-scan
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - CONSUL_HOST=consul
@@ -570,7 +570,7 @@ services:
     networks:
       - default
   tron-scan:
-    image: opexdev/tron-scan
+    image: ghcr.io/opexdev/tron-scan
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - CONSUL_HOST=consul
@@ -580,7 +580,7 @@ services:
     networks:
       - default
   test-eth-scan:
-    image: opexdev/eth-scan
+    image: ghcr.io/opexdev/eth-scan
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - CONSUL_HOST=consul
@@ -589,7 +589,7 @@ services:
     networks:
       - default
   test-bitcoin-scan:
-    image: opexdev/bitcoin-scan
+    image: ghcr.io/opexdev/bitcoin-scan
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - CONSUL_HOST=consul
@@ -600,7 +600,7 @@ services:
     networks:
       - default
   test-bsc-scan:
-    image: opexdev/eth-scan
+    image: ghcr.io/opexdev/eth-scan
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - CONSUL_HOST=consul
@@ -609,7 +609,7 @@ services:
     networks:
       - default
   postgres-payment:
-    image: postgres:14-alpine
+    image: ghcr.io/opexdev/postgres-opex
     environment:
       - POSTGRES_USER=${DB_USER:-opex}
       - POSTGRES_PASSWORD=${DB_PASS:-hiopex}
@@ -622,7 +622,7 @@ services:
     networks:
       - default
   payment:
-    image: opexdev/payment
+    image: ghcr.io/opexdev/payment
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - SPRING_PROFILES_ACTIVE=docker
@@ -638,9 +638,12 @@ services:
       restart_policy:
         condition: on-failure
   nginx:
-    image: opexdev/nginx
+    image: ghcr.io/opexdev/nginx
     volumes:
       - www:/data/www
+    secrets:
+      - opex_dev_crt
+      - private_pem
     networks:
       - default
     deploy:
@@ -791,7 +794,7 @@ services:
       - HEALTHCHECK_PORT=8080
     restart: unless-stopped
   web-app:
-    image: opexdev/web-app
+    image: ghcr.io/opexdev/web-app
     networks:
       - default
     deploy:
@@ -802,7 +805,11 @@ volumes:
     external: false
 networks:
   default:
-    name: ${DEFAULT_NETWORK_NAME:-opex}
     driver: overlay
     driver_opts:
       encrypted: 'yes'
+secrets:
+  opex_dev_crt:
+    file: opex.dev.crt
+  private_pem:
+    file: private.pem
