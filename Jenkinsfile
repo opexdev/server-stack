@@ -14,7 +14,7 @@ pipeline {
                     sh 'cp -f $PRIVATE ./private.pem'
                     sh 'cp -f $PUBLIC ./opex.dev.crt'
                 }
-                sh 'docker-compose up -d --build --remove-orphans'
+                sh 'OPEX_TAG=latest docker-compose -f docker-stack.yml up -d --build --remove-orphans'
                 sh 'docker image prune -f'
                 sh 'docker network prune -f'
                 sh 'docker restart demo-opex_nginx_1'

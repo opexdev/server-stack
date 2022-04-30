@@ -1,0 +1,27 @@
+name: Build on pull request
+
+on:
+  pull_request:
+    types: [ opened, synchronize, reopened ]
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        java: [ 11 ]
+    name: Build and test OPEX with java ${{ matrix.java }}
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v2
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-package: jdk
+          java-version: ${{ matrix.java }}
+          cache: maven
+      - name: Build
+        run: mvn -B -T 1C clean install
+      - name: Build Docker images
+        run: TAG=latest docker-compose -f docker-stack.yml build
