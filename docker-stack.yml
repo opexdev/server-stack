@@ -93,7 +93,7 @@ services:
       - kafka-2
       - kafka-3
   vault:
-    image: ghcr.io/opexdev/ghcr.io/opexdev/vault-opex
+    image: ghcr.io/opexdev/vault-opex
     volumes:
       - vault-data:/vault/file
     environment:
@@ -640,7 +640,7 @@ services:
   accountant-backup:
     image: prodrigestivill/postgres-backup-local
     volumes:
-      - accountatn-backup:/backups
+      - accountant-backup:/backups
     networks:
       - default
     environment:
@@ -808,7 +808,7 @@ volumes:
   admin-data:
   scan-gateway-data:
   opex-payment-data:
-  accountatn-backup:
+  accountant-backup:
   auth-backup:
   wallet-backup:
   eventlog-backup:
