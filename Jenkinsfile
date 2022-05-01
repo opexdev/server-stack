@@ -4,7 +4,7 @@ pipeline {
     stages('Deploy') {
         stage('Deliver') {
             environment {
-                COMPOSE_PROJECT_NAME = 'demo-opex'
+                OPEX_TAG = 'latest'
             }
             steps {
                 withCredentials([
@@ -14,10 +14,10 @@ pipeline {
                     sh 'cp -f $PRIVATE ./private.pem'
                     sh 'cp -f $PUBLIC ./opex.dev.crt'
                 }
-                sh 'OPEX_TAG=latest docker-compose -f docker-stack.yml up -d --build --remove-orphans'
+                sh 'docker stack -c docker-stack.yml -c docker-stack.override.yml deploy demo-opex'
+                sh 'docker service update opex_nginx'
                 sh 'docker image prune -f'
                 sh 'docker network prune -f'
-                sh 'docker restart demo-opex_nginx_1'
             }
         }
     }

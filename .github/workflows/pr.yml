@@ -24,4 +24,6 @@ jobs:
       - name: Build
         run: mvn -B -T 1C clean install
       - name: Build Docker images
-        run: TAG=latest docker-compose -f docker-stack.yml build
+        env:
+          OPEX_TAG: latest
+        run: docker-compose -f docker-stack.yml build
