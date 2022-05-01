@@ -92,6 +92,9 @@ services:
       - kafka-1
       - kafka-2
       - kafka-3
+    deploy:
+      restart_policy:
+        condition: on-failure
   vault:
     image: ghcr.io/opexdev/vault-opex:$OPEX_TAG
     volumes:
@@ -113,6 +116,9 @@ services:
       retries: 5
     cap_add:
       - IPC_LOCK
+    deploy:
+      restart_policy:
+        condition: on-failure
   vault-ui:
     image: djenriquez/vault-ui
     environment:
@@ -120,6 +126,9 @@ services:
       - VAULT_AUTH_DEFAULT=USERNAMEPASSWORD
     depends_on:
       - vault
+    deploy:
+      restart_policy:
+        condition: on-failure
   consul:
     image: consul
     environment:
@@ -153,6 +162,9 @@ services:
       - accountant-data:/var/lib/postgresql/data/
     networks:
       - default
+    deploy:
+      restart_policy:
+        condition: on-failure
   postgres-eventlog:
     image: ghcr.io/opexdev/postgres-opex:$OPEX_TAG
     environment:
@@ -165,6 +177,9 @@ services:
       - eventlog-data:/var/lib/postgresql/data/
     networks:
       - default
+    deploy:
+      restart_policy:
+        condition: on-failure
   postgres-auth:
     image: ghcr.io/opexdev/postgres-opex:$OPEX_TAG
     environment:
@@ -259,6 +274,9 @@ services:
       - consul
       - vault
       - postgres-accountant
+    deploy:
+      restart_policy:
+        condition: on-failure
   eventlog:
     image: ghcr.io/opexdev/eventlog:$OPEX_TAG
     environment:
@@ -277,6 +295,9 @@ services:
       - consul
       - vault
       - postgres-eventlog
+    deploy:
+      restart_policy:
+        condition: on-failure
   matching-engine:
     image: ghcr.io/opexdev/matching-engine:$OPEX_TAG
     environment:
@@ -290,6 +311,9 @@ services:
       - kafka-2
       - kafka-3
       - redis
+    deploy:
+      restart_policy:
+        condition: on-failure
   matching-gateway:
     image: ghcr.io/opexdev/matching-gateway:$OPEX_TAG
     environment:
@@ -305,6 +329,9 @@ services:
       - auth
       - consul
       - matching-engine
+    deploy:
+      restart_policy:
+        condition: on-failure
   auth:
     image: ghcr.io/opexdev/auth:$OPEX_TAG
     environment:
@@ -513,6 +540,9 @@ services:
       - scan-gateway-data:/var/lib/postgresql/data/
     networks:
       - default
+    deploy:
+      restart_policy:
+        condition: on-failure
   gateway:
     image: ghcr.io/opexdev/gateway:$OPEX_TAG
     environment:
@@ -524,6 +554,8 @@ services:
     networks:
       - default
     depends_on:
+      - vault
+      - consul
       - eth-scan
       - bsc-scan
       - bitcoin-scan
@@ -539,6 +571,11 @@ services:
       - RPC_ENDPOINT=${ETH_RPC_ENDPOINT}
     networks:
       - default
+    depends_on:
+      - consul
+    deploy:
+      restart_policy:
+        condition: on-failure
   bitcoin-scan:
     image: ghcr.io/opexdev/bitcoin-scan:$OPEX_TAG
     environment:
@@ -549,6 +586,11 @@ services:
       - API_KEY=${BITCOIN_API_KEY}
     networks:
       - default
+    depends_on:
+      - consul
+    deploy:
+      restart_policy:
+        condition: on-failure
   bsc-scan:
     image: ghcr.io/opexdev/eth-scan:$OPEX_TAG
     environment:
@@ -558,6 +600,11 @@ services:
       - RPC_ENDPOINT=${BSC_RPC_ENDPOINT}
     networks:
       - default
+    depends_on:
+      - consul
+    deploy:
+      restart_policy:
+        condition: on-failure
   tron-scan:
     image: ghcr.io/opexdev/tron-scan:$OPEX_TAG
     environment:
@@ -568,6 +615,11 @@ services:
       - API_KEY=${TRON_API_KEY}
     networks:
       - default
+    depends_on:
+      - consul
+    deploy:
+      restart_policy:
+        condition: on-failure
   test-eth-scan:
     image: ghcr.io/opexdev/eth-scan:$OPEX_TAG
     environment:
@@ -577,6 +629,11 @@ services:
       - RPC_ENDPOINT=${TEST_ETH_RPC_ENDPOINT}
     networks:
       - default
+    depends_on:
+      - consul
+    deploy:
+      restart_policy:
+        condition: on-failure
   test-bitcoin-scan:
     image: ghcr.io/opexdev/bitcoin-scan:$OPEX_TAG
     environment:
@@ -588,6 +645,11 @@ services:
       - API_KEY=${TEST_BITCOIN_API_KEY}
     networks:
       - default
+    depends_on:
+      - consul
+    deploy:
+      restart_policy:
+        condition: on-failure
   test-bsc-scan:
     image: ghcr.io/opexdev/eth-scan:$OPEX_TAG
     environment:
@@ -597,6 +659,11 @@ services:
       - RPC_ENDPOINT=${TEST_BSC_RPC_ENDPOINT}
     networks:
       - default
+    depends_on:
+      - consul
+    deploy:
+      restart_policy:
+        condition: on-failure
   postgres-payment:
     image: ghcr.io/opexdev/postgres-opex:$OPEX_TAG
     environment:
@@ -609,6 +676,9 @@ services:
       - opex-payment-data:/var/lib/postgresql/data/
     networks:
       - default
+    deploy:
+      restart_policy:
+        condition: on-failure
   payment:
     image: ghcr.io/opexdev/payment:$OPEX_TAG
     environment:
@@ -621,6 +691,8 @@ services:
     networks:
       - default
     depends_on:
+      - consul
+      - vault
       - postgres-payment
     deploy:
       restart_policy:
@@ -634,6 +706,16 @@ services:
       - private_pem
     networks:
       - default
+    depends_on:
+      - accountant
+      - wallet
+      - storage
+      - admin
+      - api
+      - bc-gateway
+      - referral
+      - websocket
+      - payment
     deploy:
       restart_policy:
         condition: on-failure
@@ -654,7 +736,9 @@ services:
       - BACKUP_KEEP_WEEKS=4
       - BACKUP_KEEP_MONTHS=6
       - HEALTHCHECK_PORT=8080
-    restart: unless-stopped
+    deploy:
+      restart_policy:
+        condition: on-failure
   auth-backup:
     image: prodrigestivill/postgres-backup-local
     volumes:
@@ -672,7 +756,11 @@ services:
       - BACKUP_KEEP_WEEKS=4
       - BACKUP_KEEP_MONTHS=6
       - HEALTHCHECK_PORT=8080
-    restart: unless-stopped
+    depends_on:
+      - postgres-auth
+    deploy:
+      restart_policy:
+        condition: on-failure
   wallet-backup:
     image: prodrigestivill/postgres-backup-local
     volumes:
@@ -690,7 +778,11 @@ services:
       - BACKUP_KEEP_WEEKS=4
       - BACKUP_KEEP_MONTHS=6
       - HEALTHCHECK_PORT=8080
-    restart: unless-stopped
+    depends_on:
+      - postgres-wallet
+    deploy:
+      restart_policy:
+        condition: on-failure
   eventlog-backup:
     image: prodrigestivill/postgres-backup-local
     volumes:
@@ -708,7 +800,11 @@ services:
       - BACKUP_KEEP_WEEKS=4
       - BACKUP_KEEP_MONTHS=6
       - HEALTHCHECK_PORT=8080
-    restart: unless-stopped
+    depends_on:
+      - postgres-eventlog
+    deploy:
+      restart_policy:
+        condition: on-failure
   api-backup:
     image: prodrigestivill/postgres-backup-local
     volumes:
@@ -726,7 +822,11 @@ services:
       - BACKUP_KEEP_WEEKS=4
       - BACKUP_KEEP_MONTHS=6
       - HEALTHCHECK_PORT=8080
-    restart: unless-stopped
+    depends_on:
+      - postgres-api
+    deploy:
+      restart_policy:
+        condition: on-failure
   bc-gateway-backup:
     image: prodrigestivill/postgres-backup-local
     volumes:
@@ -744,7 +844,11 @@ services:
       - BACKUP_KEEP_WEEKS=4
       - BACKUP_KEEP_MONTHS=6
       - HEALTHCHECK_PORT=8080
-    restart: unless-stopped
+    depends_on:
+      - postgres-bc-gateway
+    deploy:
+      restart_policy:
+        condition: on-failure
   payment-backup:
     image: prodrigestivill/postgres-backup-local
     volumes:
@@ -762,7 +866,11 @@ services:
       - BACKUP_KEEP_WEEKS=4
       - BACKUP_KEEP_MONTHS=6
       - HEALTHCHECK_PORT=8080
-    restart: unless-stopped
+    depends_on:
+      - postgres-payment
+    deploy:
+      restart_policy:
+        condition: on-failure
   referral-backup:
     image: prodrigestivill/postgres-backup-local
     volumes:
@@ -780,7 +888,11 @@ services:
       - BACKUP_KEEP_WEEKS=4
       - BACKUP_KEEP_MONTHS=6
       - HEALTHCHECK_PORT=8080
-    restart: unless-stopped
+    depends_on:
+      - postgres-referral
+    deploy:
+      restart_policy:
+        condition: on-failure
 volumes:
   www:
   zookeeper-data:
