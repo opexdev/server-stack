@@ -5,6 +5,19 @@ pipeline {
         stage('Deliver') {
             environment {
                 OPEX_TAG = 'latest'
+                PANEL_PASS = credentials("v-panel-secret")
+                BACKEND_USER = credentials("v-backend-secret")
+                SMTP_PASS = credentials("smtp-secret")
+                DB_USER = 'opex'
+                DB_PASS = credentials("db-secret")
+                DB_BACKUP_USER = 'opex_backup'
+                DB_BACKUP_PASS = credentials("db-backup-secret")
+                KEYCLOAK_ADMIN_URL = 'https://demo.opex.dev/auth'
+                KEYCLOAK_FRONTEND_URL = 'https://demo.opex.dev/auth'
+                KEYCLOAK_ADMIN_USERNAME = credentials("keycloak-admin-username")
+                KEYCLOAK_ADMIN_PASSWORD = credentials("keycloak-admin-password")
+                OPEX_ADMIN_KEYCLOAK_CLIENT_SECRET = credentials("opex-admin-keycloak-client-secret")
+                VANDAR_API_KEY = credentials("vandar-api-key")
             }
             steps {
                 withCredentials([
