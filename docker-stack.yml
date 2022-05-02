@@ -893,6 +893,17 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
+  web-app:
+    image: ghcr.io/opexdev/web-app:$OPEX_TAG
+    environment:
+      - API_BASE_URL=$API_BASE_URL
+      - CLIENT_ID=$CLIENT_ID
+      - CLIENT_SECRET=$CLIENT_SECRET
+    networks:
+      - default
+    deploy:
+      restart_policy:
+        condition: on-failure
 volumes:
   www:
   zookeeper-data:
