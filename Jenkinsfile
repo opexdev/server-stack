@@ -14,7 +14,7 @@ pipeline {
                     sh 'cp -f $PRIVATE ./private.pem'
                     sh 'cp -f $PUBLIC ./opex.dev.crt'
                 }
-                sh 'docker stack -c docker-stack.yml -c docker-stack.override.yml deploy demo-opex'
+                sh 'docker stack deploy -c docker-stack.yml -c docker-stack.override.yml demo-opex'
                 sh 'docker service update opex_nginx'
                 sh 'docker image prune -f'
                 sh 'docker network prune -f'
