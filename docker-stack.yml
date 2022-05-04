@@ -935,6 +935,7 @@ volumes:
 networks:
   default:
     driver: overlay
+    attachable: true
     driver_opts:
       encrypted: 'yes'
 secrets:
