@@ -52,6 +52,10 @@ services:
     image: ghcr.io/opexdev/postgres-opex:latest
   gateway:
     image: ghcr.io/opexdev/gateway:latest
+    depends_on:
+      - eth-scan
+      - bsc-scan
+      - bitcoin-scan
   eth-scan:
     image: ghcr.io/opexdev/eth-scan:latest
     environment:

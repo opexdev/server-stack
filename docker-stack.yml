@@ -576,63 +576,6 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
-  eth-scan:
-    image: ghcr.io/opexdev/eth-scan
-    environment:
-      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
-      - CONSUL_HOST=consul
-      - RPC_ENDPOINT=${ETH_RPC_ENDPOINT}
-    networks:
-      - default
-    depends_on:
-      - consul
-    deploy:
-      restart_policy:
-        condition: on-failure
-  bitcoin-scan:
-    image: ghcr.io/opexdev/bitcoin-scan
-    environment:
-      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
-      - CONSUL_HOST=consul
-      - RPC_ENDPOINT=${BITCOIN_RPC_ENDPOINT}
-      - REST_ENDPOINT=${BITCOIN_REST_ENDPOINT}
-      - API_KEY=${BITCOIN_API_KEY}
-    networks:
-      - default
-    depends_on:
-      - consul
-    deploy:
-      restart_policy:
-        condition: on-failure
-  bsc-scan:
-    image: ghcr.io/opexdev/eth-scan
-    environment:
-      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
-      - CONSUL_HOST=consul
-      - APPLICATION_NAME=bsc-scan
-      - RPC_ENDPOINT=${BSC_RPC_ENDPOINT}
-    networks:
-      - default
-    depends_on:
-      - consul
-    deploy:
-      restart_policy:
-        condition: on-failure
-  tron-scan:
-    image: ghcr.io/opexdev/tron-scan
-    environment:
-      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
-      - CONSUL_HOST=consul
-      - APPLICATION_NAME=tron-scan
-      - REST_ENDPOINT=${TRON_REST_ENDPOINT}
-      - API_KEY=${TRON_API_KEY}
-    networks:
-      - default
-    depends_on:
-      - consul
-    deploy:
-      restart_policy:
-        condition: on-failure
   postgres-payment:
     image: ghcr.io/opexdev/postgres-opex
     environment:
