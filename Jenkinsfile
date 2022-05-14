@@ -4,7 +4,6 @@ pipeline {
     stages('Deploy') {
         stage('Deliver') {
             environment {
-                OPEX_TAG = 'latest'
                 PANEL_PASS = credentials("v-panel-secret")
                 BACKEND_USER = credentials("v-backend-secret")
                 SMTP_PASS = credentials("smtp-secret")
@@ -26,6 +25,11 @@ pipeline {
                 ]) {
                     sh 'cp -f $PRIVATE ./private.pem'
                     sh 'cp -f $PUBLIC ./opex.dev.crt'
+                }
+                configFileProvider([
+                    configFile(fileId: 'preferences-demo.yml', variable: 'PREFERENCES_YML')
+                ]) {
+                    sh 'cp -f $PREFERENCES_YML ./preferences.yml'
                 }
                 sh 'docker stack deploy -c docker-stack.yml -c docker-stack.override.yml demo-opex'
                 sh 'docker service update demo-opex_nginx -d'
