@@ -6,6 +6,89 @@ services:
   consul:
     ports:
       - "8501:8500"
+  vault:
+    image: ghcr.io/opexdev/vault-opex:dev
+  postgres-accountant:
+    image: ghcr.io/opexdev/postgres-opex:dev
+  postgres-eventlog:
+    image: ghcr.io/opexdev/postgres-opex:dev
+  postgres-auth:
+    image: ghcr.io/opexdev/postgres-opex:dev
+  postgres-wallet:
+    image: ghcr.io/opexdev/postgres-opex:dev
+  postgres-api:
+    image: ghcr.io/opexdev/postgres-opex:dev
+  postgres-bc-gateway:
+    image: ghcr.io/opexdev/postgres-opex:dev
+  postgres-referral:
+    image: ghcr.io/opexdev/postgres-opex:dev
+  accountant:
+    image: ghcr.io/opexdev/accountant:dev
+  eventlog:
+    image: ghcr.io/opexdev/eventlog:dev
+  matching-engine:
+    image: ghcr.io/opexdev/matching-engine:dev
+  matching-gateway:
+    image: ghcr.io/opexdev/matching-gateway:dev
+  auth:
+    image: ghcr.io/opexdev/auth:dev
+  wallet:
+    image: ghcr.io/opexdev/wallet:dev
+  api:
+    image: ghcr.io/opexdev/api:dev
+  websocket:
+    image: ghcr.io/opexdev/websocket:dev
+  bc-gateway:
+    image: ghcr.io/opexdev/bc-gateway:dev
+  storage:
+    image: ghcr.io/opexdev/storage:dev
+  referral:
+    image: ghcr.io/opexdev/referral:dev
+  captcha:
+    image: ghcr.io/opexdev/captcha:dev
+  admin:
+    image: ghcr.io/opexdev/admin:dev
+  postgres-gateway:
+    image: ghcr.io/opexdev/postgres-opex:dev
+  gateway:
+    image: ghcr.io/opexdev/gateway:dev
+  test-bitcoin-scan:
+    image: ghcr.io/opexdev/bitcoin-scan:dev
+    environment:
+      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      - CONSUL_HOST=consul
+      - APPLICATION_NAME=test-bitcoin-scan
+      - RPC_ENDPOINT=${TEST_BITCOIN_RPC_ENDPOINT}
+      - REST_ENDPOINT=${TEST_BITCOIN_REST_ENDPOINT}
+      - API_KEY=${TEST_BITCOIN_API_KEY}
+    networks:
+      - default
+    depends_on:
+      - consul
+    deploy:
+      restart_policy:
+        condition: on-failure
+  test-bsc-scan:
+    image: ghcr.io/opexdev/eth-scan:dev
+    environment:
+      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      - CONSUL_HOST=consul
+      - APPLICATION_NAME=test-bsc-scan
+      - RPC_ENDPOINT=${TEST_BSC_RPC_ENDPOINT}
+    networks:
+      - default
+    depends_on:
+      - consul
+    deploy:
+      restart_policy:
+        condition: on-failure
+  postgres-payment:
+    image: ghcr.io/opexdev/postgres-opex:dev
+  payment:
+    image: ghcr.io/opexdev/payment:dev
   nginx:
+    image: ghcr.io/opexdev/nginx:dev
     ports:
       - "8443:443"
+  web-app:
+    image: ghcr.io/opexdev/web-app:dev
