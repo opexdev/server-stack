@@ -913,5 +913,5 @@ secrets:
   private_pem:
     file: private.pem
 configs:
-  "preferences.yml":
-    file: preferences-demo.yml
+  preferences.yml:
+    file: preferences.yml
