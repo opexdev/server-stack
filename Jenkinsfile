@@ -4,6 +4,7 @@ pipeline {
     stages('Deploy') {
         stage('Deliver') {
             environment {
+                PREFERENCES = "preferences.yml"
                 PANEL_PASS = credentials("v-panel-secret")
                 BACKEND_USER = credentials("v-backend-secret")
                 SMTP_PASS = credentials("smtp-secret")
