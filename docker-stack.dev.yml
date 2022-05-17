@@ -110,3 +110,5 @@ services:
       - "8443:443"
   web-app:
     image: ghcr.io/opexdev/web-app:dev
+  admin-panel:
+    image: ghcr.io/opexdev/admin-panel:dev
