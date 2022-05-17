@@ -820,8 +820,6 @@ services:
     image: ghcr.io/opexdev/admin-panel
     environment:
       - API_BASE_URL=$API_BASE_URL
-      - DEFAULT_DIRECTION=$DEFAULT_DIRECTION
-      - BRAND_NAME=$ADMIN_BRAND_NAME
       - FRONT_URL=$ADMIN_FRONT_URL
       - CLIENT_ID=$ADMIN_CLIENT_ID
       - CLIENT_SECRET=$ADMIN_CLIENT_SECRET
