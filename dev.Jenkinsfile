@@ -33,7 +33,7 @@ pipeline {
                     sh 'cp -f $PREFERENCES_YML ./preferences.yml'
                 }
                 sh 'docker stack deploy -c docker-stack.yml -c docker-stack.dev.yml dev-opex'
-                sh 'docker service update dev-opex_nginx -d'
+                sh 'docker service update dev-opex_nginx -d --force'
                 sh 'docker image prune -f'
                 sh 'docker network prune -f'
             }
