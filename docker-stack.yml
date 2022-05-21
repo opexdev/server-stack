@@ -816,6 +816,18 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
+  admin-panel:
+    image: ghcr.io/opexdev/admin-panel
+    environment:
+      - API_BASE_URL=$API_BASE_URL
+      - FRONT_URL=$ADMIN_FRONT_URL
+      - CLIENT_ID=$ADMIN_CLIENT_ID
+      - CLIENT_SECRET=$ADMIN_CLIENT_SECRET
+    networks:
+      - default
+    deploy:
+      restart_policy:
+        condition: on-failure
 volumes:
   www:
   zookeeper-data:
