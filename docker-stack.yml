@@ -138,9 +138,10 @@ services:
         condition: on-failure
   redis:
     image: redis:7-alpine
-    command: redis-server
+    command: redis-server --appendonly yes
     volumes:
-      - redis-data:/var/lib/redis
+      - redis-data:/data
+      - redis.conf:/usr/local/etc/redis/redis.conf
     environment:
       - REDIS_REPLICATION_MODE=master
     networks:
@@ -837,6 +838,7 @@ volumes:
   kafka-3:
   vault-data:
   redis-data:
+  redis.conf:
   accountant-data:
   eventlog-data:
   auth-data:
