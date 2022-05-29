@@ -824,6 +824,7 @@ services:
       - FRONT_URL=$ADMIN_FRONT_URL
       - CLIENT_ID=$ADMIN_CLIENT_ID
       - CLIENT_SECRET=$ADMIN_CLIENT_SECRET
+      - SUPERSET_URL=$SUPERSET_URL
     networks:
       - default
     deploy:
