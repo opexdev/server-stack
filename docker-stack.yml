@@ -3,7 +3,7 @@ x-postgres-db: &postgres-db
   environment:
     - POSTGRES_USER=${DB_USER:-opex}
     - POSTGRES_PASSWORD=${DB_PASS:-hiopex}
-    - POSTGRES_READ_ONLY_USER=${DB_READ_ONLY_USER:-opex_read}
+    - POSTGRES_READ_ONLY_USER=${DB_READ_ONLY_USER:-opex_reader}
     - POSTGRES_READ_ONLY_PASSWORD=${DB_READ_ONLY_PASS:-hiopex}
   networks:
     - default
@@ -119,8 +119,8 @@ services:
       - SMTP_PASS=${SMTP_PASS}
       - DB_USER=${DB_USER:-opex}
       - DB_PASS=${DB_PASS:-hiopex}
-      - DB_BACKUP_USER=${DB_BACKUP_USER:-opex_backup}
-      - DB_BACKUP_PASS=${DB_BACKUP_PASS:-hiopex}
+      - DB_READ_ONLY_USER=${DB_READ_ONLY_USER:-opex_reader}
+      - DB_READ_ONLY_PASS=${DB_READ_ONLY_PASS:-hiopex}
       - KEYCLOAK_ADMIN_USERNAME=${KEYCLOAK_ADMIN_USERNAME:-opex-admin}
       - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_ADMIN_PASSWORD:-hiopex}
       - OPEX_ADMIN_KEYCLOAK_CLIENT_SECRET=${OPEX_ADMIN_KEYCLOAK_CLIENT_SECRET}
