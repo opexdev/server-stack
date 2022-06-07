@@ -480,6 +480,14 @@ services:
       restart_policy:
         condition: on-failure
 volumes:
+  zookeeper-data:
+  zookeeper-log:
+  kafka-1:
+  kafka-2:
+  kafka-3:
+  vault-data:
+  redis-data:
+  redis.conf:
   accountant-data:
   eventlog-data:
   auth-data:
