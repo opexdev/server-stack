@@ -31,7 +31,7 @@ pipeline {
             }
             sh 'docker stack deploy \
                     -c docker-stack.yml \
-                    -c docker-stack.override.yml \
+                    -c docker-stack.demo.yml \
                     -c docker-stack.payment.yml \
                     -c docker-stack.chain-scanner.yml \
                     -c docker-stack.ui.yml \
