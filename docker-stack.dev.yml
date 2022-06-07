@@ -48,58 +48,6 @@ services:
     image: ghcr.io/opexdev/captcha:dev
   admin:
     image: ghcr.io/opexdev/admin:dev
-  postgres-gateway:
-    image: ghcr.io/opexdev/postgres-opex:dev
-  gateway:
-    image: ghcr.io/opexdev/gateway:dev
-    depends_on:
-      - test-eth-scan
-      - test-bsc-scan
-      - test-bitcoin-scan
-  test-bitcoin-scan:
-    image: ghcr.io/opexdev/bitcoin-scan:dev
-    environment:
-      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
-      - CONSUL_HOST=consul
-      - APPLICATION_NAME=test-bitcoin-scan
-      - RPC_ENDPOINT=${TEST_BITCOIN_RPC_ENDPOINT}
-      - REST_ENDPOINT=${TEST_BITCOIN_REST_ENDPOINT}
-      - API_KEY=${TEST_BITCOIN_API_KEY}
-    networks:
-      - default
-    depends_on:
-      - consul
-    deploy:
-      restart_policy:
-        condition: on-failure
-  test-eth-scan:
-    image: ghcr.io/opexdev/eth-scan:dev
-    environment:
-      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
-      - CONSUL_HOST=consul
-      - APPLICATION_NAME=test-eth-scan
-      - RPC_ENDPOINT=${TEST_ETH_RPC_ENDPOINT}
-    networks:
-      - default
-    depends_on:
-      - consul
-    deploy:
-      restart_policy:
-        condition: on-failure
-  test-bsc-scan:
-    image: ghcr.io/opexdev/eth-scan:dev
-    environment:
-      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
-      - CONSUL_HOST=consul
-      - APPLICATION_NAME=test-bsc-scan
-      - RPC_ENDPOINT=${TEST_BSC_RPC_ENDPOINT}
-    networks:
-      - default
-    depends_on:
-      - consul
-    deploy:
-      restart_policy:
-        condition: on-failure
   postgres-payment:
     image: ghcr.io/opexdev/postgres-opex:dev
   payment:

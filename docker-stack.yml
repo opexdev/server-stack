@@ -1,3 +1,16 @@
+x-postgres-db: &postgres-db
+  image: ghcr.io/opexdev/postgres-opex
+  environment:
+    - POSTGRES_USER=${DB_USER:-opex}
+    - POSTGRES_PASSWORD=${DB_PASS:-hiopex}
+    - POSTGRES_READ_ONLY_USER=${DB_READ_ONLY_USER:-opex_read}
+    - POSTGRES_READ_ONLY_PASSWORD=${DB_READ_ONLY_PASS:-hiopex}
+  networks:
+    - default
+  deploy:
+    restart_policy:
+      condition: on-failure
+
 version: '3.8'
 services:
   zookeeper:
@@ -26,7 +39,7 @@ services:
       - KAFKA_LISTENERS=CLIENT://kafka-1:29092,EXTERNAL://kafka-1:9092
       - KAFKA_ADVERTISED_LISTENERS=CLIENT://kafka-1:29092,EXTERNAL://kafka-1:9092
       - KAFKA_INTER_BROKER_LISTENER_NAME=CLIENT
-      - KAKFA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_MIN_INSYNC_REPLICAS=2
       - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
     depends_on:
       - zookeeper
@@ -47,7 +60,7 @@ services:
       - KAFKA_LISTENERS=CLIENT://kafka-2:29092,EXTERNAL://kafka-2:9092
       - KAFKA_ADVERTISED_LISTENERS=CLIENT://kafka-2:29092,EXTERNAL://kafka-2:9092
       - KAFKA_INTER_BROKER_LISTENER_NAME=CLIENT
-      - KAKFA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_MIN_INSYNC_REPLICAS=2
       - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
     depends_on:
       - zookeeper
@@ -68,7 +81,7 @@ services:
       - KAFKA_LISTENERS=CLIENT://kafka-3:29092,EXTERNAL://kafka-3:9092
       - KAFKA_ADVERTISED_LISTENERS=CLIENT://kafka-3:29092,EXTERNAL://kafka-3:9092
       - KAFKA_INTER_BROKER_LISTENER_NAME=CLIENT
-      - KAKFA_MIN_INSYNC_REPLICAS=2
+      - KAFKA_MIN_INSYNC_REPLICAS=2
       - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
     depends_on:
       - zookeeper
@@ -150,108 +163,33 @@ services:
       restart_policy:
         condition: on-failure
   postgres-accountant:
-    image: ghcr.io/opexdev/postgres-opex
-    environment:
-      - POSTGRES_USER=${DB_USER:-opex}
-      - POSTGRES_PASSWORD=${DB_PASS:-hiopex}
-      - POSTGRES_DB=opex_accountant
-      - POSTGRES_BACKUP_USER=${DB_BACKUP_USER:-opex_backup}
-      - POSTGRES_BACKUP_PASSWORD=${DB_BACKUP_PASS:-hiopex}
+    <<: *postgres-db
     volumes:
       - accountant-data:/var/lib/postgresql/data/
-    networks:
-      - default
-    deploy:
-      restart_policy:
-        condition: on-failure
   postgres-eventlog:
-    image: ghcr.io/opexdev/postgres-opex
-    environment:
-      - POSTGRES_USER=${DB_USER:-opex}
-      - POSTGRES_PASSWORD=${DB_PASS:-hiopex}
-      - POSTGRES_DB=opex_eventlog
-      - POSTGRES_BACKUP_USER=${DB_BACKUP_USER:-opex_backup}
-      - POSTGRES_BACKUP_PASSWORD=${DB_BACKUP_PASS:-hiopex}
+    <<: *postgres-db
     volumes:
       - eventlog-data:/var/lib/postgresql/data/
-    networks:
-      - default
-    deploy:
-      restart_policy:
-        condition: on-failure
   postgres-auth:
-    image: ghcr.io/opexdev/postgres-opex
-    environment:
-      - POSTGRES_USER=${DB_USER:-opex}
-      - POSTGRES_PASSWORD=${DB_PASS:-hiopex}
-      - POSTGRES_DB=opex_auth
-      - POSTGRES_BACKUP_USER=${DB_BACKUP_USER:-opex_backup}
-      - POSTGRES_BACKUP_PASSWORD=${DB_BACKUP_PASS:-hiopex}
+    <<: *postgres-db
     volumes:
       - auth-data:/var/lib/postgresql/data/
-    networks:
-      - default
-    deploy:
-      restart_policy:
-        condition: on-failure
   postgres-wallet:
-    image: ghcr.io/opexdev/postgres-opex
-    environment:
-      - POSTGRES_USER=${DB_USER:-opex}
-      - POSTGRES_PASSWORD=${DB_PASS:-hiopex}
-      - POSTGRES_DB=opex_wallet
-      - POSTGRES_BACKUP_USER=${DB_BACKUP_USER:-opex_backup}
-      - POSTGRES_BACKUP_PASSWORD=${DB_BACKUP_PASS:-hiopex}
+    <<: *postgres-db
     volumes:
       - wallet-data:/var/lib/postgresql/data/
-    networks:
-      - default
-    deploy:
-      restart_policy:
-        condition: on-failure
   postgres-api:
-    image: ghcr.io/opexdev/postgres-opex
-    environment:
-      - POSTGRES_USER=${DB_USER:-opex}
-      - POSTGRES_PASSWORD=${DB_PASS:-hiopex}
-      - POSTGRES_DB=opex_api
-      - POSTGRES_BACKUP_USER=${DB_BACKUP_USER:-opex_backup}
-      - POSTGRES_BACKUP_PASSWORD=${DB_BACKUP_PASS:-hiopex}
+    <<: *postgres-db
     volumes:
       - api-data:/var/lib/postgresql/data/
-    networks:
-      - default
-    deploy:
-      restart_policy:
-        condition: on-failure
   postgres-bc-gateway:
-    image: ghcr.io/opexdev/postgres-opex
-    environment:
-      - POSTGRES_USER=${DB_USER:-opex}
-      - POSTGRES_PASSWORD=${DB_PASS:-hiopex}
-      - POSTGRES_DB=opex_bc_gateway
-      - POSTGRES_BACKUP_USER=${DB_BACKUP_USER:-opex_backup}
-      - POSTGRES_BACKUP_PASSWORD=${DB_BACKUP_PASS:-hiopex}
+    <<: *postgres-db
     volumes:
       - bc-gateway-data:/var/lib/postgresql/data/
-    networks:
-      - default
-    deploy:
-      restart_policy:
-        condition: on-failure
   postgres-referral:
-    image: ghcr.io/opexdev/postgres-opex
-    environment:
-      - POSTGRES_USER=${DB_USER:-opex}
-      - POSTGRES_PASSWORD=${DB_PASS:-hiopex}
-      - POSTGRES_DB=opex_referral
-      - POSTGRES_BACKUP_USER=${DB_BACKUP_USER:-opex_backup}
-      - POSTGRES_BACKUP_PASSWORD=${DB_BACKUP_PASS:-hiopex}
+    <<: *postgres-db
     volumes:
       - referral-data:/var/lib/postgresql/data/
-    deploy:
-      restart_policy:
-        condition: on-failure
   accountant:
     image: ghcr.io/opexdev/accountant
     environment:
@@ -543,304 +481,7 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
-  postgres-gateway:
-    image: ghcr.io/opexdev/postgres-opex
-    environment:
-      - POSTGRES_USER=${DB_USER:-opex}
-      - POSTGRES_PASSWORD=${DB_PASS:-hiopex}
-      - POSTGRES_DB=gateway
-      - POSTGRES_BACKUP_USER=${DB_BACKUP_USER:-opex_backup}
-      - POSTGRES_BACKUP_PASSWORD=${DB_BACKUP_PASS:-hiopex}
-    volumes:
-      - scan-gateway-data:/var/lib/postgresql/data/
-    networks:
-      - default
-    deploy:
-      restart_policy:
-        condition: on-failure
-  gateway:
-    image: ghcr.io/opexdev/gateway
-    environment:
-      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
-      - CONSUL_HOST=consul
-      - DB_IP_PORT=postgres-gateway
-      - BACKEND_USER=${BACKEND_USER}
-      - VAULT_HOST=vault
-    networks:
-      - default
-    depends_on:
-      - vault
-      - consul
-      - eth-scan
-      - bsc-scan
-      - bitcoin-scan
-      - postgres-gateway
-    deploy:
-      restart_policy:
-        condition: on-failure
-  postgres-payment:
-    image: ghcr.io/opexdev/postgres-opex
-    environment:
-      - POSTGRES_USER=${DB_USER:-opex}
-      - POSTGRES_PASSWORD=${DB_PASS:-hiopex}
-      - POSTGRES_DB=opex_payment
-      - POSTGRES_BACKUP_USER=${DB_BACKUP_USER:-opex_backup}
-      - POSTGRES_BACKUP_PASSWORD=${DB_BACKUP_PASS:-hiopex}
-    volumes:
-      - opex-payment-data:/var/lib/postgresql/data/
-    networks:
-      - default
-    deploy:
-      restart_policy:
-        condition: on-failure
-  payment:
-    image: ghcr.io/opexdev/payment
-    environment:
-      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
-      - SPRING_PROFILES_ACTIVE=docker
-      - DB_IP_PORT=postgres-payment
-      - BACKEND_USER=${BACKEND_USER}
-      - VAULT_HOST=vault
-      - CONSUL_HOST=consul
-    networks:
-      - default
-    depends_on:
-      - consul
-      - vault
-      - postgres-payment
-    deploy:
-      restart_policy:
-        condition: on-failure
-  nginx:
-    image: ghcr.io/opexdev/nginx
-    volumes:
-      - www:/data/www
-    secrets:
-      - opex_dev_crt
-      - private_pem
-    networks:
-      - default
-    depends_on:
-      - accountant
-      - wallet
-      - storage
-      - admin
-      - api
-      - bc-gateway
-      - referral
-      - websocket
-      - payment
-    deploy:
-      restart_policy:
-        condition: on-failure
-  accountant-backup:
-    image: prodrigestivill/postgres-backup-local
-    volumes:
-      - accountant-backup:/backups
-    networks:
-      - default
-    environment:
-      - POSTGRES_HOST=${POSTGRES_HOST:-postgres-accountant}
-      - POSTGRES_DB=opex_accountant
-      - POSTGRES_USER=${DB_BACKUP_USER}
-      - POSTGRES_PASSWORD=${DB_BACKUP_PASS}
-      - POSTGRES_EXTRA_OPTS=-Z6 --schema=public --blobs
-      - SCHEDULE=*/30 * * * *
-      - BACKUP_KEEP_DAYS=7
-      - BACKUP_KEEP_WEEKS=4
-      - BACKUP_KEEP_MONTHS=6
-      - HEALTHCHECK_PORT=8080
-    deploy:
-      restart_policy:
-        condition: on-failure
-  auth-backup:
-    image: prodrigestivill/postgres-backup-local
-    volumes:
-      - auth-backup:/backups
-    networks:
-      - default
-    environment:
-      - POSTGRES_HOST=${POSTGRES_HOST:-postgres-auth}
-      - POSTGRES_DB=opex_auth
-      - POSTGRES_USER=${DB_BACKUP_USER}
-      - POSTGRES_PASSWORD=${DB_BACKUP_PASS}
-      - POSTGRES_EXTRA_OPTS=-Z6 --schema=public --blobs
-      - SCHEDULE=*/30 * * * *
-      - BACKUP_KEEP_DAYS=7
-      - BACKUP_KEEP_WEEKS=4
-      - BACKUP_KEEP_MONTHS=6
-      - HEALTHCHECK_PORT=8080
-    depends_on:
-      - postgres-auth
-    deploy:
-      restart_policy:
-        condition: on-failure
-  wallet-backup:
-    image: prodrigestivill/postgres-backup-local
-    volumes:
-      - wallet-backup:/backups
-    networks:
-      - default
-    environment:
-      - POSTGRES_HOST=${POSTGRES_HOST:-postgres-wallet}
-      - POSTGRES_DB=opex_wallet
-      - POSTGRES_USER=${DB_BACKUP_USER}
-      - POSTGRES_PASSWORD=${DB_BACKUP_PASS}
-      - POSTGRES_EXTRA_OPTS=-Z6 --schema=public --blobs
-      - SCHEDULE=*/30 * * * *
-      - BACKUP_KEEP_DAYS=7
-      - BACKUP_KEEP_WEEKS=4
-      - BACKUP_KEEP_MONTHS=6
-      - HEALTHCHECK_PORT=8080
-    depends_on:
-      - postgres-wallet
-    deploy:
-      restart_policy:
-        condition: on-failure
-  eventlog-backup:
-    image: prodrigestivill/postgres-backup-local
-    volumes:
-      - eventlog-backup:/backups
-    networks:
-      - default
-    environment:
-      - POSTGRES_HOST=${POSTGRES_HOST:-postgres-eventlog}
-      - POSTGRES_DB=opex_eventlog
-      - POSTGRES_USER=${DB_BACKUP_USER}
-      - POSTGRES_PASSWORD=${DB_BACKUP_PASS}
-      - POSTGRES_EXTRA_OPTS=-Z6 --schema=public --blobs
-      - SCHEDULE=*/30 * * * *
-      - BACKUP_KEEP_DAYS=7
-      - BACKUP_KEEP_WEEKS=4
-      - BACKUP_KEEP_MONTHS=6
-      - HEALTHCHECK_PORT=8080
-    depends_on:
-      - postgres-eventlog
-    deploy:
-      restart_policy:
-        condition: on-failure
-  api-backup:
-    image: prodrigestivill/postgres-backup-local
-    volumes:
-      - api-backup:/backups
-    networks:
-      - default
-    environment:
-      - POSTGRES_HOST=${POSTGRES_HOST:-postgres-api}
-      - POSTGRES_DB=opex_api
-      - POSTGRES_USER=${DB_BACKUP_USER}
-      - POSTGRES_PASSWORD=${DB_BACKUP_PASS}
-      - POSTGRES_EXTRA_OPTS=-Z6 --schema=public --blobs
-      - SCHEDULE=*/30 * * * *
-      - BACKUP_KEEP_DAYS=7
-      - BACKUP_KEEP_WEEKS=4
-      - BACKUP_KEEP_MONTHS=6
-      - HEALTHCHECK_PORT=8080
-    depends_on:
-      - postgres-api
-    deploy:
-      restart_policy:
-        condition: on-failure
-  bc-gateway-backup:
-    image: prodrigestivill/postgres-backup-local
-    volumes:
-      - bc-gateway-backup:/backups
-    networks:
-      - default
-    environment:
-      - POSTGRES_HOST=${POSTGRES_HOST:-postgres-bc-gateway}
-      - POSTGRES_DB=opex_bc_gateway
-      - POSTGRES_USER=${DB_BACKUP_USER}
-      - POSTGRES_PASSWORD=${DB_BACKUP_PASS}
-      - POSTGRES_EXTRA_OPTS=-Z6 --schema=public --blobs
-      - SCHEDULE=*/30 * * * *
-      - BACKUP_KEEP_DAYS=7
-      - BACKUP_KEEP_WEEKS=4
-      - BACKUP_KEEP_MONTHS=6
-      - HEALTHCHECK_PORT=8080
-    depends_on:
-      - postgres-bc-gateway
-    deploy:
-      restart_policy:
-        condition: on-failure
-  payment-backup:
-    image: prodrigestivill/postgres-backup-local
-    volumes:
-      - payment-backup:/backups
-    networks:
-      - default
-    environment:
-      - POSTGRES_HOST=${POSTGRES_HOST:-postgres-payment}
-      - POSTGRES_DB=opex_payment
-      - POSTGRES_USER=${DB_BACKUP_USER}
-      - POSTGRES_PASSWORD=${DB_BACKUP_PASS}
-      - POSTGRES_EXTRA_OPTS=-Z6 --schema=public --blobs
-      - SCHEDULE=*/30 * * * *
-      - BACKUP_KEEP_DAYS=7
-      - BACKUP_KEEP_WEEKS=4
-      - BACKUP_KEEP_MONTHS=6
-      - HEALTHCHECK_PORT=8080
-    depends_on:
-      - postgres-payment
-    deploy:
-      restart_policy:
-        condition: on-failure
-  referral-backup:
-    image: prodrigestivill/postgres-backup-local
-    volumes:
-      - referral-backup:/backups
-    networks:
-      - default
-    environment:
-      - POSTGRES_HOST=${POSTGRES_HOST:-postgres-referral}
-      - POSTGRES_DB=opex_referral
-      - POSTGRES_USER=${DB_BACKUP_USER}
-      - POSTGRES_PASSWORD=${DB_BACKUP_PASS}
-      - POSTGRES_EXTRA_OPTS=-Z6 --schema=public --blobs
-      - SCHEDULE=*/30 * * * *
-      - BACKUP_KEEP_DAYS=7
-      - BACKUP_KEEP_WEEKS=4
-      - BACKUP_KEEP_MONTHS=6
-      - HEALTHCHECK_PORT=8080
-    depends_on:
-      - postgres-referral
-    deploy:
-      restart_policy:
-        condition: on-failure
-  web-app:
-    image: ghcr.io/opexdev/web-app
-    environment:
-      - API_BASE_URL=$API_BASE_URL
-      - CLIENT_ID=$CLIENT_ID
-      - CLIENT_SECRET=$CLIENT_SECRET
-    networks:
-      - default
-    deploy:
-      restart_policy:
-        condition: on-failure
-  admin-panel:
-    image: ghcr.io/opexdev/admin-panel
-    environment:
-      - API_BASE_URL=$API_BASE_URL
-      - FRONT_URL=$ADMIN_FRONT_URL
-      - CLIENT_ID=$ADMIN_CLIENT_ID
-      - CLIENT_SECRET=$ADMIN_CLIENT_SECRET
-      - SUPERSET_URL=$SUPERSET_URL
-    networks:
-      - default
-    deploy:
-      restart_policy:
-        condition: on-failure
 volumes:
-  www:
-  zookeeper-data:
-  zookeeper-log:
-  kafka-1:
-  kafka-2:
-  kafka-3:
-  vault-data:
-  redis-data:
-  redis.conf:
   accountant-data:
   eventlog-data:
   auth-data:
@@ -851,15 +492,6 @@ volumes:
   storage-data:
   admin-data:
   scan-gateway-data:
-  opex-payment-data:
-  accountant-backup:
-  auth-backup:
-  wallet-backup:
-  eventlog-backup:
-  api-backup:
-  bc-gateway-backup:
-  payment-backup:
-  referral-backup:
 networks:
   default:
     driver: overlay
