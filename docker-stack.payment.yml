@@ -16,7 +16,7 @@ services:
   postgres-payment:
     <<: *postgres-db
     volumes:
-      - opex-payment-data:/var/lib/postgresql/data/
+      - payment-data:/var/lib/postgresql/data/
   payment:
     image: ghcr.io/opexdev/payment
     environment:
@@ -35,4 +35,4 @@ services:
       restart_policy:
         condition: on-failure
 volumes:
-  opex-payment-data:
+  payment-data:
