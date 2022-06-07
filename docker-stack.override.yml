@@ -22,6 +22,8 @@ services:
     image: ghcr.io/opexdev/postgres-opex:latest
   postgres-referral:
     image: ghcr.io/opexdev/postgres-opex:latest
+  postgres-payment:
+    image: ghcr.io/opexdev/postgres-opex:latest
   accountant:
     image: ghcr.io/opexdev/accountant:latest
   eventlog:
@@ -48,8 +50,6 @@ services:
     image: ghcr.io/opexdev/captcha:latest
   admin:
     image: ghcr.io/opexdev/admin:latest
-  postgres-payment:
-    image: ghcr.io/opexdev/postgres-opex:latest
   payment:
     image: ghcr.io/opexdev/payment:latest
   nginx:
