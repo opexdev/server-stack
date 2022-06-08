@@ -497,7 +497,6 @@ volumes:
   referral-data:
   storage-data:
   admin-data:
-  scan-gateway-data:
 networks:
   default:
     driver: overlay
