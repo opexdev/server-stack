@@ -1,8 +1,8 @@
 pipeline {
     agent any
 
-    stages {
-        stages('Deploy') {
+    stages('Deploy') {
+        stages('Deploy Swarm') {
             environment {
                 PREFERENCES = "preferences.yml"
                 PANEL_PASS = credentials("v-panel-secret")
