@@ -4,7 +4,7 @@ pipeline {
     stages('Deploy') {
         stage('Deploy Swarm') {
             environment {
-                TAG=latest
+                TAG = 'latest'
                 PREFERENCES = "preferences.yml"
                 PANEL_PASS = credentials("v-panel-secret")
                 BACKEND_USER = credentials("v-backend-secret")
