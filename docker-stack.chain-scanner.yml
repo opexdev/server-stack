@@ -39,6 +39,7 @@ services:
       - JAVA_OPTS=-Xmx768m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - DB_IP_PORT=postgres-scanner-scheduler
       - PREFERENCES=$PREFERENCES
+      - VAULT_HOST=vault
     configs:
       - preferences.yml
     depends_on:
@@ -55,6 +56,7 @@ services:
       - CHAIN_NAME=ethereum
       - RPC_ENDPOINT=${ETH_RPC_ENDPOINT}
       - PREFERENCES=$PREFERENCES
+      - VAULT_HOST=vault
     configs:
       - preferences.yml
     depends_on:
@@ -70,6 +72,7 @@ services:
       - REST_ENDPOINT=${BITCOIN_REST_ENDPOINT}
       - API_KEY=${BITCOIN_API_KEY}
       - PREFERENCES=$PREFERENCES
+      - VAULT_HOST=vault
     configs:
       - preferences.yml
     depends_on:
@@ -85,6 +88,7 @@ services:
       - CHAIN_NAME=bsc
       - RPC_ENDPOINT=${BSC_RPC_ENDPOINT}
       - PREFERENCES=$PREFERENCES
+      - VAULT_HOST=vault
     configs:
       - preferences.yml
     depends_on:
@@ -100,6 +104,7 @@ services:
       - REST_ENDPOINT=${TRON_REST_ENDPOINT}
       - API_KEY=${TRON_API_KEY}
       - PREFERENCES=$PREFERENCES
+      - VAULT_HOST=vault
     configs:
       - preferences.yml
     depends_on:
