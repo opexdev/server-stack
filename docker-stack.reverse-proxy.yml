@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   nginx:
-    image: ghcr.io/opexdev/nginx
+    image: ghcr.io/opexdev/nginx:$TAG
     volumes:
       - www:/data/www
     secrets:

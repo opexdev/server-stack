@@ -1,5 +1,5 @@
 x-postgres-db: &postgres-db
-  image: ghcr.io/opexdev/postgres-opex
+  image: ghcr.io/opexdev/postgres-opex:$TAG
   environment:
     - POSTGRES_USER=${DB_USER:-opex}
     - POSTGRES_PASSWORD=${DB_PASS:-hiopex}
@@ -34,7 +34,7 @@ services:
     volumes:
       - tron-scanner-data:/var/lib/postgresql/data/
   scanner-scheduler:
-    image: ghcr.io/opexdev/scanner-scheduler
+    image: ghcr.io/opexdev/scanner-scheduler:$TAG
     environment:
       - JAVA_OPTS=-Xmx768m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - DB_IP_PORT=postgres-scanner-scheduler
@@ -48,7 +48,7 @@ services:
     networks:
       - default
   ethereum-scanner:
-    image: ghcr.io/opexdev/ethereum-scanner
+    image: ghcr.io/opexdev/ethereum-scanner:$TAG
     environment:
       - JAVA_OPTS=-Xmx768m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - DB_IP_PORT=postgres-ethereum-scanner
@@ -63,7 +63,7 @@ services:
     networks:
       - default
   bitcoin-scanner:
-    image: ghcr.io/opexdev/bitcoin-scanner
+    image: ghcr.io/opexdev/bitcoin-scanner:$TAG
     environment:
       - JAVA_OPTS=-Xmx768m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - DB_IP_PORT=postgres-bitcoin-scanner
@@ -78,7 +78,7 @@ services:
     networks:
       - default
   bsc-scanner:
-    image: ghcr.io/opexdev/ethereum-scanner
+    image: ghcr.io/opexdev/ethereum-scanner:$TAG
     environment:
       - JAVA_OPTS=-Xmx768m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - DB_IP_PORT=postgres-bsc-scanner
@@ -93,7 +93,7 @@ services:
     networks:
       - default
   tron-scanner:
-    image: ghcr.io/opexdev/tron-scanner
+    image: ghcr.io/opexdev/tron-scanner:$TAG
     environment:
       - JAVA_OPTS=-Xmx768m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - DB_IP_PORT=postgres-tron-scanner

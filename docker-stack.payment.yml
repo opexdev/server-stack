@@ -1,5 +1,5 @@
 x-postgres-db: &postgres-db
-  image: ghcr.io/opexdev/postgres-opex
+  image: ghcr.io/opexdev/postgres-opex:$TAG
   environment:
     - POSTGRES_USER=${DB_USER:-opex}
     - POSTGRES_PASSWORD=${DB_PASS:-hiopex}
@@ -18,7 +18,7 @@ services:
     volumes:
       - payment-data:/var/lib/postgresql/data/
   payment:
-    image: ghcr.io/opexdev/payment
+    image: ghcr.io/opexdev/payment:$TAG
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - DB_IP_PORT=postgres-payment
