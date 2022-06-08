@@ -63,6 +63,7 @@ services:
       - eventlog-backup:/backups
     environment:
       - POSTGRES_HOST=${POSTGRES_HOST:-postgres-eventlog}
+      - POSTGRES_DB=opex
       - POSTGRES_USER=${DB_READ_ONLY_USER}
       - POSTGRES_PASSWORD=${DB_READ_ONLY_PASS}
       - POSTGRES_EXTRA_OPTS=-Z6 --schema=public --blobs
