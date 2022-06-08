@@ -10,7 +10,7 @@ pipeline {
             DB_USER = 'opex'
             DB_PASS = credentials("db-secret")
             DB_READ_ONLY_USER = 'opex_reader'
-            DB_READ_ONLY_PASS = credentials("db-backup-secret")
+            DB_READ_ONLY_PASS = credentials("db-reader-secret")
             KEYCLOAK_ADMIN_USERNAME = credentials("keycloak-admin-username")
             KEYCLOAK_ADMIN_PASSWORD = credentials("keycloak-admin-password")
             OPEX_ADMIN_KEYCLOAK_CLIENT_SECRET = credentials("opex-admin-keycloak-client-secret")
