@@ -32,13 +32,13 @@ pipeline {
                 }
                 sh 'docker stack deploy \
                         -c docker-stack.yml \
-                        -c docker-stack.demo.yml \
                         -c docker-stack.payment.yml \
                         -c docker-stack.chain-scanner.yml \
                         -c docker-stack.ui.yml \
                         -c docker-stack.backup.yml \
                         -c docker-stack.reverse-proxy.yml \
                         -c docker-stack.superset.yml \
+                        -c docker-stack.demo.yml \
                            opex-demo'
                 sh 'docker service update opex-demo_nginx -d --force'
                 sh 'docker image prune -f'
