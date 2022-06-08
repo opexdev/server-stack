@@ -1,5 +1,5 @@
 x-postgres-db: &postgres-db
-  image: ghcr.io/opexdev/postgres-opex
+  image: ghcr.io/opexdev/postgres-opex:$TAG
   environment:
     - POSTGRES_USER=${DB_USER:-opex}
     - POSTGRES_PASSWORD=${DB_PASS:-hiopex}
@@ -109,7 +109,7 @@ services:
       restart_policy:
         condition: on-failure
   vault:
-    image: ghcr.io/opexdev/vault-opex
+    image: ghcr.io/opexdev/vault-opex:$TAG
     volumes:
       - vault-data:/vault/file
     environment:
@@ -191,7 +191,7 @@ services:
     volumes:
       - referral-data:/var/lib/postgresql/data/
   accountant:
-    image: ghcr.io/opexdev/accountant
+    image: ghcr.io/opexdev/accountant:$TAG
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - KAFKA_IP_PORT=kafka-1:29092,kafka-2:29092,kafka-3:29092
@@ -217,7 +217,7 @@ services:
       restart_policy:
         condition: on-failure
   eventlog:
-    image: ghcr.io/opexdev/eventlog
+    image: ghcr.io/opexdev/eventlog:$TAG
     environment:
       - JAVA_OPTS=-Xmx256m
       - KAFKA_IP_PORT=kafka-1:29092,kafka-2:29092,kafka-3:29092
@@ -238,7 +238,7 @@ services:
       restart_policy:
         condition: on-failure
   matching-engine:
-    image: ghcr.io/opexdev/matching-engine
+    image: ghcr.io/opexdev/matching-engine:$TAG
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - KAFKA_IP_PORT=kafka-1:29092,kafka-2:29092,kafka-3:29092
@@ -257,7 +257,7 @@ services:
       restart_policy:
         condition: on-failure
   matching-gateway:
-    image: ghcr.io/opexdev/matching-gateway
+    image: ghcr.io/opexdev/matching-gateway:$TAG
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - KAFKA_IP_PORT=kafka-1:29092,kafka-2:29092,kafka-3:29092
@@ -275,7 +275,7 @@ services:
       restart_policy:
         condition: on-failure
   auth:
-    image: ghcr.io/opexdev/auth
+    image: ghcr.io/opexdev/auth:$TAG
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - KAFKA_IP_PORT=kafka-1:29092,kafka-2:29092,kafka-3:29092
@@ -301,7 +301,7 @@ services:
       restart_policy:
         condition: on-failure
   wallet:
-    image: ghcr.io/opexdev/wallet
+    image: ghcr.io/opexdev/wallet:$TAG
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - KAFKA_IP_PORT=kafka-1:29092,kafka-2:29092,kafka-3:29092
@@ -327,7 +327,7 @@ services:
       restart_policy:
         condition: on-failure
   api:
-    image: ghcr.io/opexdev/api
+    image: ghcr.io/opexdev/api:$TAG
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - KAFKA_IP_PORT=kafka-1:29092,kafka-2:29092,kafka-3:29092
@@ -358,7 +358,7 @@ services:
       restart_policy:
         condition: on-failure
   websocket:
-    image: ghcr.io/opexdev/websocket
+    image: ghcr.io/opexdev/websocket:$TAG
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - KAFKA_IP_PORT=kafka-1:29092,kafka-2:29092,kafka-3:29092
@@ -380,7 +380,7 @@ services:
       restart_policy:
         condition: on-failure
   bc-gateway:
-    image: ghcr.io/opexdev/bc-gateway
+    image: ghcr.io/opexdev/bc-gateway:$TAG
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - CONSUL_HOST=consul
@@ -407,7 +407,7 @@ services:
       restart_policy:
         condition: on-failure
   storage:
-    image: ghcr.io/opexdev/storage
+    image: ghcr.io/opexdev/storage:$TAG
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - CONSUL_HOST=consul
@@ -424,7 +424,7 @@ services:
       restart_policy:
         condition: on-failure
   referral:
-    image: ghcr.io/opexdev/referral
+    image: ghcr.io/opexdev/referral:$TAG
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=1044
       - CONSUL_HOST=consul
@@ -446,7 +446,7 @@ services:
       restart_policy:
         condition: on-failure
   captcha:
-    image: ghcr.io/opexdev/captcha
+    image: ghcr.io/opexdev/captcha:$TAG
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=1044
       - CONSUL_HOST=consul
@@ -457,7 +457,7 @@ services:
       restart_policy:
         condition: on-failure
   admin:
-    image: ghcr.io/opexdev/admin
+    image: ghcr.io/opexdev/admin:$TAG
     environment:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - KAFKA_IP_PORT=kafka-1:29092,kafka-2:29092,kafka-3:29092

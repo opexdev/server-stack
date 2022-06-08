@@ -4,6 +4,7 @@ pipeline {
     stages('Deploy') {
         stage('Deploy Swarm') {
             environment {
+                TAG = 'dev'
                 PREFERENCES = "preferences.yml"
                 PANEL_PASS = credentials("v-panel-secret-dev")
                 BACKEND_USER = credentials("v-backend-secret-dev")

@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   web-app:
-    image: ghcr.io/opexdev/web-app
+    image: ghcr.io/opexdev/web-app:$TAG
     environment:
       - API_BASE_URL=$API_BASE_URL
       - CLIENT_ID=$CLIENT_ID
@@ -12,7 +12,7 @@ services:
       restart_policy:
         condition: on-failure
   admin-panel:
-    image: ghcr.io/opexdev/admin-panel
+    image: ghcr.io/opexdev/admin-panel:$TAG
     environment:
       - API_BASE_URL=$API_BASE_URL
       - FRONT_URL=$ADMIN_FRONT_URL
