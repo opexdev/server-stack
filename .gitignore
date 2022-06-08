@@ -8,3 +8,4 @@
 *.crt
 *.pem
 .env
+preferences.yml
