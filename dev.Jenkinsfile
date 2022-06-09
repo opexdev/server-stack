@@ -43,8 +43,6 @@ pipeline {
                         -c docker-stack.dev.yml \
                            opex-dev'
                 sh 'docker service update opex-dev_nginx -d --force'
-                sh 'docker image prune -f'
-                sh 'docker network prune -f'
             }
         }
     }
