@@ -54,7 +54,6 @@ services:
     environment:
       - JAVA_OPTS=-Xmx768m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - DB_IP_PORT=postgres-ethereum-scanner
-      - CHAIN_NAME=ethereum
       - RPC_ENDPOINT=${ETH_RPC_ENDPOINT}
       - PREFERENCES=$PREFERENCES
       - BACKEND_USER=${BACKEND_USER}
@@ -88,7 +87,6 @@ services:
     environment:
       - JAVA_OPTS=-Xmx768m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - DB_IP_PORT=postgres-bsc-scanner
-      - CHAIN_NAME=bsc
       - RPC_ENDPOINT=${BSC_RPC_ENDPOINT}
       - PREFERENCES=$PREFERENCES
       - BACKEND_USER=${BACKEND_USER}

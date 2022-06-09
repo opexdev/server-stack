@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  ethereum-scanner:
+    environment:
+      - CHAIN_NAME=test-ethereum
+  bitcoin-scanner:
+    environment:
+      - CHAIN_NAME=test-bitcoin
+  bsc-scanner:
+    environment:
+      - CHAIN_NAME=test-bsc
+  tron-scanner:
+    environment:
+      - CHAIN_NAME=test-tron

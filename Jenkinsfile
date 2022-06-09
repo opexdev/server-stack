@@ -35,6 +35,7 @@ pipeline {
                         -c docker-stack.yml \
                         -c docker-stack.payment.yml \
                         -c docker-stack.chain-scanner.yml \
+                        -c docker-stack.chain-scanner-demo.yml \
                         -c docker-stack.ui.yml \
                         -c docker-stack.backup.yml \
                         -c docker-stack.reverse-proxy.yml \
