@@ -40,6 +40,7 @@ pipeline {
                         -c docker-stack.reverse-proxy.yml \
                         -c docker-stack.superset.yml \
                         -c docker-stack.demo.yml \
+                        --resolve-image changed
                            opex-demo'
                 sh 'docker service update opex-demo_nginx -d --force'
                 sh 'docker image prune -f'
