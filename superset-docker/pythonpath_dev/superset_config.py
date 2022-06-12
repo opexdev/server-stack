@@ -114,11 +114,3 @@ except ImportError:
     logger.info("Using default Docker config...")
 
 ENABLE_PROXY_FIX = True
-
-#CORS Options
-#ENABLE_CORS = False
-#CORS_OPTIONS = {}
-#SUPERSET_WEBSERVER_DOMAINS = ["*"]
-#ResponseHeader set Access-Control-Allow-Origin "*" 
-#Header always set Access-Control-Allow-Origin "*"
-#ENABLE_CORS = False
