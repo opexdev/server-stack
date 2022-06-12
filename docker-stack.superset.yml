@@ -16,7 +16,7 @@
 #
 x-superset-image: &superset-image apache/superset:latest
 x-superset-depends-on: &superset-depends-on
-  - db
+  - superset-db
   - superset-cache
 x-superset-volumes: &superset-volumes
   # /app/pythonpath_docker will be appended to the PYTHONPATH in the final container
@@ -32,7 +32,7 @@ services:
       - superset-cache-data:/data
     networks:
       - default
-  db:
+  superset-db:
     env_file: superset-docker/.env-non-dev
     image: postgres:14-alpine
     restart: unless-stopped
