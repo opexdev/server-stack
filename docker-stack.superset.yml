@@ -56,39 +56,6 @@ services:
     volumes: *superset-volumes
     networks:
       - default
-  superset-init:
-    image: *superset-image
-    command: ["/app/docker/docker-init.sh"]
-    env_file: superset-docker/.env-non-dev
-    depends_on: *superset-depends-on
-    user: "root"
-    volumes: *superset-volumes
-    networks:
-      - default
-  superset-worker:
-    image: *superset-image
-    command: ["/app/docker/docker-bootstrap.sh", "worker"]
-    env_file: superset-docker/.env-non-dev
-    deploy:
-      restart_policy:
-        condition: on-failure
-    depends_on: *superset-depends-on
-    user: "root"
-    volumes: *superset-volumes
-    networks:
-      - default
-  superset-worker-beat:
-    image: *superset-image
-    command: ["/app/docker/docker-bootstrap.sh", "beat"]
-    env_file: superset-docker/.env-non-dev
-    deploy:
-      restart_policy:
-        condition: on-failure
-    depends_on: *superset-depends-on
-    user: "root"
-    volumes: *superset-volumes
-    networks:
-      - default
 volumes:
   superset_home:
   superset-db-data:
