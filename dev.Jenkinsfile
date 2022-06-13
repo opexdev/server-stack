@@ -42,7 +42,6 @@ pipeline {
                         -c docker-stack.superset.yml \
                         -c docker-stack.dev.yml \
                            opex-dev'
-                sh 'docker service update opex-dev_nginx -d --force'
             }
         }
     }
