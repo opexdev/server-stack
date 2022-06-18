@@ -2,18 +2,17 @@ pipeline {
     agent any
 
     stages('Deploy') {
-        stage('Deliver') {
+        stage('Deploy Swarm') {
             environment {
+                TAG = 'latest'
                 PREFERENCES = "preferences.yml"
                 PANEL_PASS = credentials("v-panel-secret")
                 BACKEND_USER = credentials("v-backend-secret")
                 SMTP_PASS = credentials("smtp-secret")
                 DB_USER = 'opex'
                 DB_PASS = credentials("db-secret")
-                DB_BACKUP_USER = 'opex_backup'
-                DB_BACKUP_PASS = credentials("db-backup-secret")
-                KEYCLOAK_ADMIN_URL = 'https://demo.opex.dev/auth'
-                KEYCLOAK_FRONTEND_URL = 'https://demo.opex.dev/auth'
+                DB_READ_ONLY_USER = 'opex_reader'
+                DB_READ_ONLY_PASS = credentials("db-reader-secret")
                 KEYCLOAK_ADMIN_USERNAME = credentials("keycloak-admin-username")
                 KEYCLOAK_ADMIN_PASSWORD = credentials("keycloak-admin-password")
                 OPEX_ADMIN_KEYCLOAK_CLIENT_SECRET = credentials("opex-admin-keycloak-client-secret")
@@ -32,10 +31,17 @@ pipeline {
                 ]) {
                     sh 'cp -f $PREFERENCES_YML ./preferences.yml'
                 }
-                sh 'docker stack deploy -c docker-stack.yml -c docker-stack.override.yml demo-opex'
-                sh 'docker service update demo-opex_nginx -d --force'
-                sh 'docker image prune -f'
-                sh 'docker network prune -f'
+                sh 'docker stack deploy \
+                        -c docker-stack.yml \
+                        -c docker-stack.payment.yml \
+                        -c docker-stack.chain-scanner.yml \
+                        -c docker-stack.chain-scanner-demo.yml \
+                        -c docker-stack.ui.yml \
+                        -c docker-stack.backup.yml \
+                        -c docker-stack.reverse-proxy.yml \
+                        -c docker-stack.superset.yml \
+                        -c docker-stack.demo.yml \
+                           opex-demo'
             }
         }
     }

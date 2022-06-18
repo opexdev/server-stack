@@ -2,10 +2,10 @@ version: '3.8'
 services:
   vault-ui:
     ports:
-      - "8001:8000"
+      - "8002:8000"
   consul:
     ports:
-      - "8501:8500"
+      - "8502:8500"
   nginx:
     ports:
-      - "8443:443"
+      - "2053:443"

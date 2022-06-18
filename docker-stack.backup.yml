@@ -1,0 +1,155 @@
+x-backup-service: &backup-service
+  image: prodrigestivill/postgres-backup-local
+  networks:
+    - default
+  deploy:
+    restart_policy:
+      condition: on-failure
+
+version: '3.8'
+services:
+  accountant-backup:
+    <<: *backup-service
+    volumes:
+      - accountant-backup:/backups
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST:-postgres-accountant}
+      - POSTGRES_DB=opex
+      - POSTGRES_USER=${DB_READ_ONLY_USER}
+      - POSTGRES_PASSWORD=${DB_READ_ONLY_PASS}
+      - POSTGRES_EXTRA_OPTS=-Z6 --schema=public --blobs
+      - SCHEDULE=*/30 * * * *
+      - BACKUP_KEEP_DAYS=7
+      - BACKUP_KEEP_WEEKS=4
+      - BACKUP_KEEP_MONTHS=6
+      - HEALTHCHECK_PORT=8080
+  auth-backup:
+    <<: *backup-service
+    volumes:
+      - auth-backup:/backups
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST:-postgres-auth}
+      - POSTGRES_DB=opex
+      - POSTGRES_USER=${DB_READ_ONLY_USER}
+      - POSTGRES_PASSWORD=${DB_READ_ONLY_PASS}
+      - POSTGRES_EXTRA_OPTS=-Z6 --schema=public --blobs
+      - SCHEDULE=*/30 * * * *
+      - BACKUP_KEEP_DAYS=7
+      - BACKUP_KEEP_WEEKS=4
+      - BACKUP_KEEP_MONTHS=6
+      - HEALTHCHECK_PORT=8080
+    depends_on:
+      - postgres-auth
+  wallet-backup:
+    <<: *backup-service
+    volumes:
+      - wallet-backup:/backups
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST:-postgres-wallet}
+      - POSTGRES_DB=opex
+      - POSTGRES_USER=${DB_READ_ONLY_USER}
+      - POSTGRES_PASSWORD=${DB_READ_ONLY_PASS}
+      - POSTGRES_EXTRA_OPTS=-Z6 --schema=public --blobs
+      - SCHEDULE=*/30 * * * *
+      - BACKUP_KEEP_DAYS=7
+      - BACKUP_KEEP_WEEKS=4
+      - BACKUP_KEEP_MONTHS=6
+      - HEALTHCHECK_PORT=8080
+    depends_on:
+      - postgres-wallet
+  eventlog-backup:
+    <<: *backup-service
+    volumes:
+      - eventlog-backup:/backups
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST:-postgres-eventlog}
+      - POSTGRES_DB=opex
+      - POSTGRES_USER=${DB_READ_ONLY_USER}
+      - POSTGRES_PASSWORD=${DB_READ_ONLY_PASS}
+      - POSTGRES_EXTRA_OPTS=-Z6 --schema=public --blobs
+      - SCHEDULE=*/30 * * * *
+      - BACKUP_KEEP_DAYS=7
+      - BACKUP_KEEP_WEEKS=4
+      - BACKUP_KEEP_MONTHS=6
+      - HEALTHCHECK_PORT=8080
+    depends_on:
+      - postgres-eventlog
+  api-backup:
+    <<: *backup-service
+    volumes:
+      - api-backup:/backups
+    networks:
+      - default
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST:-postgres-api}
+      - POSTGRES_DB=opex
+      - POSTGRES_USER=${DB_READ_ONLY_USER}
+      - POSTGRES_PASSWORD=${DB_READ_ONLY_PASS}
+      - POSTGRES_EXTRA_OPTS=-Z6 --schema=public --blobs
+      - SCHEDULE=*/30 * * * *
+      - BACKUP_KEEP_DAYS=7
+      - BACKUP_KEEP_WEEKS=4
+      - BACKUP_KEEP_MONTHS=6
+      - HEALTHCHECK_PORT=8080
+    depends_on:
+      - postgres-api
+  bc-gateway-backup:
+    <<: *backup-service
+    volumes:
+      - bc-gateway-backup:/backups
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST:-postgres-bc-gateway}
+      - POSTGRES_DB=opex
+      - POSTGRES_USER=${DB_READ_ONLY_USER}
+      - POSTGRES_PASSWORD=${DB_READ_ONLY_PASS}
+      - POSTGRES_EXTRA_OPTS=-Z6 --schema=public --blobs
+      - SCHEDULE=*/30 * * * *
+      - BACKUP_KEEP_DAYS=7
+      - BACKUP_KEEP_WEEKS=4
+      - BACKUP_KEEP_MONTHS=6
+      - HEALTHCHECK_PORT=8080
+    depends_on:
+      - postgres-bc-gateway
+  payment-backup:
+    <<: *backup-service
+    volumes:
+      - payment-backup:/backups
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST:-postgres-payment}
+      - POSTGRES_DB=opex
+      - POSTGRES_USER=${DB_READ_ONLY_USER}
+      - POSTGRES_PASSWORD=${DB_READ_ONLY_PASS}
+      - POSTGRES_EXTRA_OPTS=-Z6 --schema=public --blobs
+      - SCHEDULE=*/30 * * * *
+      - BACKUP_KEEP_DAYS=7
+      - BACKUP_KEEP_WEEKS=4
+      - BACKUP_KEEP_MONTHS=6
+      - HEALTHCHECK_PORT=8080
+    depends_on:
+      - postgres-payment
+  referral-backup:
+    <<: *backup-service
+    volumes:
+      - referral-backup:/backups
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST:-postgres-referral}
+      - POSTGRES_DB=opex
+      - POSTGRES_USER=${DB_READ_ONLY_USER}
+      - POSTGRES_PASSWORD=${DB_READ_ONLY_PASS}
+      - POSTGRES_EXTRA_OPTS=-Z6 --schema=public --blobs
+      - SCHEDULE=*/30 * * * *
+      - BACKUP_KEEP_DAYS=7
+      - BACKUP_KEEP_WEEKS=4
+      - BACKUP_KEEP_MONTHS=6
+      - HEALTHCHECK_PORT=8080
+    depends_on:
+      - postgres-referral
+volumes:
+  accountant-backup:
+  auth-backup:
+  wallet-backup:
+  eventlog-backup:
+  api-backup:
+  bc-gateway-backup:
+  payment-backup:
+  referral-backup:

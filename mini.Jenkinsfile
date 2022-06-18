@@ -34,14 +34,9 @@ pipeline {
                 sh 'docker stack deploy \
                         -c docker-stack.yml \
                         -c docker-stack.payment.yml \
-                        -c docker-stack.chain-scanner.yml \
-                        -c docker-stack.chain-scanner-dev.yml \
-                        -c docker-stack.ui.yml \
-                        -c docker-stack.backup.yml \
                         -c docker-stack.reverse-proxy.yml \
-                        -c docker-stack.superset.yml \
-                        -c docker-stack.dev.yml \
-                           opex-dev'
+                        -c docker-stack.mini.yml \
+                           opex-mini'
             }
         }
     }

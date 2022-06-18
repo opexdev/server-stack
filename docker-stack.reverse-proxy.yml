@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  nginx:
+    image: ghcr.io/opexdev/nginx:$TAG
+    volumes:
+      - www:/data/www
+    secrets:
+      - opex_dev_crt
+      - private_pem
+    networks:
+      - default
+    depends_on:
+      - accountant
+      - wallet
+      - storage
+      - admin
+      - api
+      - bc-gateway
+      - referral
+      - websocket
+      - payment
+    deploy:
+      restart_policy:
+        condition: on-failure
+volumes:
+  www:

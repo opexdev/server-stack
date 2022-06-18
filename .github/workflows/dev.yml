@@ -7,7 +7,7 @@ on:
 
 jobs:
   jenkinsJob:
-    name: Build OPEX new dev version
+    name: Deploy OPEX new dev version
     runs-on: ubuntu-20.04
     steps:
       - name: Trigger jenkins job

@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  web-app:
+    image: ghcr.io/opexdev/web-app:$TAG
+    environment:
+      - API_BASE_URL=$API_BASE_URL
+      - CLIENT_ID=$CLIENT_ID
+      - CLIENT_SECRET=$CLIENT_SECRET
+    networks:
+      - default
+    deploy:
+      restart_policy:
+        condition: on-failure
+  admin-panel:
+    image: ghcr.io/opexdev/admin-panel:$TAG
+    environment:
+      - API_BASE_URL=$API_BASE_URL
+      - FRONT_URL=$ADMIN_FRONT_URL
+      - CLIENT_ID=$ADMIN_CLIENT_ID
+      - CLIENT_SECRET=$ADMIN_CLIENT_SECRET
+      - SUPERSET_URL=$SUPERSET_URL
+    networks:
+      - default
+    deploy:
+      restart_policy:
+        condition: on-failure

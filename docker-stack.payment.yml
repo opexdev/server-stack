@@ -1,0 +1,39 @@
+x-postgres-db: &postgres-db
+  image: ghcr.io/opexdev/postgres-opex:$TAG
+  environment:
+    - POSTGRES_USER=${DB_USER:-opex}
+    - POSTGRES_PASSWORD=${DB_PASS:-hiopex}
+    - POSTGRES_DB=${DB_USER:-opex}
+    - POSTGRES_READ_ONLY_USER=${DB_READ_ONLY_USER:-opex_reader}
+    - POSTGRES_READ_ONLY_PASSWORD=${DB_READ_ONLY_PASS:-hiopex}
+  networks:
+    - default
+  deploy:
+    restart_policy:
+      condition: on-failure
+
+version: '3.8'
+services:
+  postgres-payment:
+    <<: *postgres-db
+    volumes:
+      - payment-data:/var/lib/postgresql/data/
+  payment:
+    image: ghcr.io/opexdev/payment:$TAG
+    environment:
+      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      - DB_IP_PORT=postgres-payment
+      - BACKEND_USER=${BACKEND_USER}
+      - VAULT_HOST=vault
+      - CONSUL_HOST=consul
+    networks:
+      - default
+    depends_on:
+      - consul
+      - vault
+      - postgres-payment
+    deploy:
+      restart_policy:
+        condition: on-failure
+volumes:
+  payment-data:
