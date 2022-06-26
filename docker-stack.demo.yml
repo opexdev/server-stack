@@ -6,6 +6,3 @@ services:
   consul:
     ports:
       - "8500:8500"
-  nginx:
-    ports:
-      - "443:443"
