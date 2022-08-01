@@ -13,7 +13,7 @@ jobs:
       - name: Trigger jenkins job
         uses: appleboy/jenkins-action@master
         with:
-          url: ${{ secrets.JENKINS_URL }}
-          user: ${{ secrets.JENKINS_USER }}
-          token: ${{ secrets.JENKINS_TOKEN }}
-          job: "demo-opex"
+          url: ${{ secrets.JENKINS_DEMO_URL }}
+          user: ${{ secrets.JENKINS_DEMO_USER }}
+          token: ${{ secrets.JENKINS_DEMO_TOKEN }}
+          job: "opex-demo"
