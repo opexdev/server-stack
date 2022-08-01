@@ -2,11 +2,20 @@ version: '3.8'
 services:
   nginx:
     image: ghcr.io/opexdev/nginx:$TAG
+    environment:
+      - EXPOSED_PORT=$EXPOSED_PORT
+      - SERVER_NAME_DASHBOARD=$SERVER_NAME_DASHBOARD
+      - SERVER_NAME_ADMIN_PANEL=$SERVER_NAME_ADMIN_PANEL
+      - SERVER_NAME_WEB_APP=$SERVER_NAME_WEB_APP
+      - SERVER_NAME_AUTH=$SERVER_NAME_AUTH
+      - SERVER_NAME_API=$SERVER_NAME_API
     volumes:
       - www:/data/www
     secrets:
       - opex_dev_crt
       - private_pem
+    ports:
+      - "$EXPOSED_PORT:443"
     networks:
       - default
     depends_on:

@@ -78,8 +78,6 @@ services:
     <<: *backup-service
     volumes:
       - api-backup:/backups
-    networks:
-      - default
     environment:
       - POSTGRES_HOST=${POSTGRES_HOST:-postgres-api}
       - POSTGRES_DB=opex
