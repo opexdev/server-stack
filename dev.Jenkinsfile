@@ -17,6 +17,7 @@ pipeline {
                 KEYCLOAK_ADMIN_PASSWORD = credentials("keycloak-admin-password-dev")
                 OPEX_ADMIN_KEYCLOAK_CLIENT_SECRET = credentials("opex-admin-keycloak-client-secret-dev")
                 VANDAR_API_KEY = credentials("vandar-api-key-dev")
+                FILEBEAT_API_KEY = credentials("filebeat-api-key-dev")
             }
             steps {
                 withCredentials([
@@ -40,6 +41,7 @@ pipeline {
                         -c docker-stack.backup.yml \
                         -c docker-stack.reverse-proxy.yml \
                         -c docker-stack.superset.yml \
+                        -c docker-stack.elastic.yml \
                         -c docker-stack.dev.yml \
                            opex-dev'
             }
