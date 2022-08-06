@@ -22,7 +22,8 @@ services:
       - default
   kibana:
     image: elastic/kibana:8.3.2
-    #    environment:
+    environment:
+      - xpack.security.encryptionKey=secret
     #      - server.publicBaseUrl=$KIBANA_PUBLIC_URL
     networks:
       - default
