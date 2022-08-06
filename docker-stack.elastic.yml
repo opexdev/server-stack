@@ -7,7 +7,7 @@ services:
       - discovery.type=single-node
       - ingest.geoip.downloader.enabled=false
       - node.name=elasticsearch
-      - xpack.http.ssl.verification_mode=certificate
+      - xpack.security.transport.ssl.verification_mode=certificate
 #      - xpack.security.enrollment.enabled=true
 #      - xpack.security.autoconfiguration.enabled=true
     volumes:
