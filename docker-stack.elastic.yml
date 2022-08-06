@@ -11,8 +11,7 @@ services:
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
     networks:
-      default:
-        ip4v_address: 10.0.22.63
+      - default
   kibana:
     image: elastic/kibana:8.3.2
     #    environment:
