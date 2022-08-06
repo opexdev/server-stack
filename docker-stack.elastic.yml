@@ -2,22 +2,15 @@ version: '3.8'
 services:
   elasticsearch:
     image: elastic/elasticsearch:8.3.2
+    network_mode:
+      default:
+        ip4v_address: 10.0.22.63
     environment:
       - ES_JAVA_OPTS=-Xms1g -Xmx1g
       - discovery.type=single-node
       - ingest.geoip.downloader.enabled=false
       - node.name=elasticsearch
       - network.publish_host=elasticsearch
-    #      - xpack.security.http.ssl.enabled=false
-    #      - xpack.security.transport.ssl.enabled=false
-    #      - xpack.security.enrollment.enabled=true
-    #      - xpack.security.http.ssl.verification_mode=certificate
-    #      - xpack.security.transport.ssl.verification_mode=certificate
-    #      - xpack.security.enabled=false
-    #      - xpack.security.http.ssl.enabled=false
-    #      - xpack.security.transport.ssl.enabled=false
-    #      - xpack.security.autoconfiguration.enabled=false
-    #      - xpack.security.enrollment.enabled=false
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
     networks:
@@ -25,12 +18,6 @@ services:
   kibana:
     image: elastic/kibana:8.3.2
     #    environment:
-    #      - xpack.encryptedSavedObjects.encryptionKey=89a2f5d051e199942b8c99987d859b9d
-    #      - xpack.reporting.encryptionKey=923d362c7dfa9552de7e0f3b246cc12f
-    #      - xpack.security.encryptionKey=61a00e153c75b8ebae9760517179c33c
-    #      - elasticsearch.hosts='["http://elasticsearch:9200"]'
-    #      - elasticsearch.username=kibana_system
-    #      - elasticsearch.password=kibana_system
     #      - server.publicBaseUrl=$KIBANA_PUBLIC_URL
     networks:
       - default
