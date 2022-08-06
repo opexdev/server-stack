@@ -9,6 +9,7 @@ services:
       - node.name=elasticsearch
       - xpack.http.ssl.verification_mode=certificate
       - xpack.security.enrollment.enabled=true
+      - xpack.security.autoconfiguration.enabled=true
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
     networks:
