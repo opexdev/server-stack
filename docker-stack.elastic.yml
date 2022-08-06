@@ -7,7 +7,7 @@ services:
       - discovery.type=single-node
       - ingest.geoip.downloader.enabled=false
       - node.name=elasticsearch
-      - xpack.ssl.verification_mode=certificate
+      - xpack.http.ssl.verification_mode=certificate
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
     networks:
