@@ -15,7 +15,7 @@ services:
   kibana:
     image: elastic/kibana:8.3.2
     environment:
-      - server.publicBaseUrl=$KIBANA_PUBLIC_URL
+      - SERVER_PUBLICBASEURL=$KIBANA_PUBLIC_URL
     networks:
       - default
   filebeat:
