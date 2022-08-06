@@ -33,15 +33,15 @@ services:
     #      - server.publicBaseUrl=$KIBANA_PUBLIC_URL
     networks:
       - default
-    filebeat:
-      image: ghcr.io/opexdev/opex-filebeat:$TAG
-      user: root
-      environment:
-        - FILEBEAT_API_KEY=$FILEBEAT_API_KEY
-      volumes:
-        - /var/lib/docker:/var/lib/docker:ro
-        - /var/run/docker.sock:/var/run/docker.sock
-      networks:
-        - default
+  filebeat:
+    image: ghcr.io/opexdev/opex-filebeat:$TAG
+    user: root
+    environment:
+      - FILEBEAT_API_KEY=$FILEBEAT_API_KEY
+    volumes:
+      - /var/lib/docker:/var/lib/docker:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - default
 volumes:
   elasticsearch_data:
