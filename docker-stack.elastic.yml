@@ -7,6 +7,7 @@ services:
       - discovery.type=single-node
       - ingest.geoip.downloader.enabled=false
       - node.name=elasticsearch
+      - network.publish_host=elasticsearch
     #      - xpack.security.http.ssl.enabled=false
     #      - xpack.security.transport.ssl.enabled=false
     #      - xpack.security.enrollment.enabled=true
