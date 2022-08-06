@@ -7,7 +7,7 @@ services:
       - discovery.type=single-node
       - ingest.geoip.downloader.enabled=false
       - node.name=elasticsearch
-      - network.publish_host=elasticsearch,*
+      - network.publish_host=elasticsearch
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
     networks:
