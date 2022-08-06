@@ -6,7 +6,8 @@ services:
       - ES_JAVA_OPTS=-Xms1g -Xmx1g
       - discovery.type=single-node
       - ingest.geoip.downloader.enabled=false
-      - network.host=_local_,elasticsearch
+      - node.name=elasticsearch
+      - xpack.security.transport.ssl.verification_mode=certificate
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
     networks:
