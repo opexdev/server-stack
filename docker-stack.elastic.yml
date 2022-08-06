@@ -2,9 +2,6 @@ version: '3.8'
 services:
   elasticsearch:
     image: elastic/elasticsearch:8.3.2
-    network_mode:
-      default:
-        ip4v_address: 10.0.22.63
     environment:
       - ES_JAVA_OPTS=-Xms1g -Xmx1g
       - discovery.type=single-node
@@ -14,7 +11,8 @@ services:
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
     networks:
-      - default
+      default:
+        ip4v_address: 10.0.22.63
   kibana:
     image: elastic/kibana:8.3.2
     #    environment:
