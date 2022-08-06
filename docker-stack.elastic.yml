@@ -24,6 +24,7 @@ services:
     image: elastic/kibana:8.3.2
     environment:
       - xpack.security.encryptionKey=secret
+      - elasticsearch.hosts='["http://elasticsearch:9200"]'
     #      - server.publicBaseUrl=$KIBANA_PUBLIC_URL
     networks:
       - default
