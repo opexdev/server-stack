@@ -7,10 +7,11 @@ services:
       - discovery.type=single-node
       - ingest.geoip.downloader.enabled=false
       - node.name=elasticsearch
-      - xpack.security.http.ssl.enabled=false
-      - xpack.security.transport.ssl.enabled=false
-      - xpack.security.autoconfiguration.enabled=false
-      - xpack.security.enrollment.enabled=false
+      - xpack.security.enabled=false
+#      - xpack.security.http.ssl.enabled=false
+#      - xpack.security.transport.ssl.enabled=false
+#      - xpack.security.autoconfiguration.enabled=false
+#      - xpack.security.enrollment.enabled=false
     #      - xpack.security.transport.ssl.verification_mode=certificate
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
@@ -18,6 +19,8 @@ services:
       - default
   kibana:
     image: elastic/kibana:8.3.2
+#    environment:
+#      - server.publicBaseUrl=$KIBANA_PUBLIC_URL
     networks:
       - default
   filebeat:
