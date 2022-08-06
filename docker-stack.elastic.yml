@@ -23,20 +23,22 @@ services:
   kibana:
     image: elastic/kibana:8.3.2
     environment:
-      - xpack.security.encryptionKey=secret
+      - xpack.encryptedSavedObjects.encryptionKey=89a2f5d051e199942b8c99987d859b9d
+      - xpack.reporting.encryptionKey=923d362c7dfa9552de7e0f3b246cc12f
+      - xpack.security.encryptionKey=61a00e153c75b8ebae9760517179c33c
       - elasticsearch.hosts='["http://elasticsearch:9200"]'
     #      - server.publicBaseUrl=$KIBANA_PUBLIC_URL
     networks:
       - default
-  filebeat:
-    image: ghcr.io/opexdev/opex-filebeat:$TAG
-    user: root
-    environment:
-      - FILEBEAT_API_KEY=$FILEBEAT_API_KEY
-    volumes:
-      - /var/lib/docker:/var/lib/docker:ro
-      - /var/run/docker.sock:/var/run/docker.sock
-    networks:
-      - default
+    filebeat:
+      image: ghcr.io/opexdev/opex-filebeat:$TAG
+      user: root
+      environment:
+        - FILEBEAT_API_KEY=$FILEBEAT_API_KEY
+      volumes:
+        - /var/lib/docker:/var/lib/docker:ro
+        - /var/run/docker.sock:/var/run/docker.sock
+      networks:
+        - default
 volumes:
   elasticsearch_data:
