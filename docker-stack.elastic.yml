@@ -8,6 +8,7 @@ services:
       - ingest.geoip.downloader.enabled=false
       - node.name=elasticsearch
       - xpack.http.ssl.verification_mode=certificate
+      - xpack.security.enrollment.enabled=true
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
     networks:
