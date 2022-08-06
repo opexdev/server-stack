@@ -6,10 +6,10 @@ services:
       - ES_JAVA_OPTS=-Xms1g -Xmx1g
       - discovery.type=single-node
       - ingest.geoip.downloader.enabled=false
-      - node.name=elasticsearch
-      - xpack.http.ssl.verification_mode=certificate
-      - xpack.security.enrollment.enabled=true
-      - xpack.security.autoconfiguration.enabled=true
+#      - node.name=elasticsearch
+#      - xpack.http.ssl.verification_mode=certificate
+#      - xpack.security.enrollment.enabled=true
+#      - xpack.security.autoconfiguration.enabled=true
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
     networks:
