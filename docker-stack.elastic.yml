@@ -10,8 +10,8 @@ services:
       - xpack.security.http.ssl.enabled=false
       - xpack.security.transport.ssl.enabled=false
       - xpack.security.autoconfiguration.enabled=false
+      - xpack.security.enrollment.enabled=false
     #      - xpack.security.transport.ssl.verification_mode=certificate
-    #      - xpack.security.enrollment.enabled=true
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
     networks:
