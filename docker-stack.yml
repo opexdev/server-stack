@@ -179,6 +179,10 @@ services:
     <<: *postgres-db
     volumes:
       - wallet-data:/var/lib/postgresql/data/
+  postgres-market:
+    <<: *postgres-db
+    volumes:
+      - market-data:/var/lib/postgresql/data/
   postgres-api:
     <<: *postgres-db
     volumes:
@@ -328,6 +332,30 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
+  market:
+    image: ghcr.io/opexdev/market:$TAG
+    environment:
+      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      - KAFKA_IP_PORT=kafka-1:29092,kafka-2:29092,kafka-3:29092
+      - CONSUL_HOST=consul
+      - DB_IP_PORT=postgres-market
+      - BACKEND_USER=${BACKEND_USER}
+      - VAULT_HOST=vault
+      - SWAGGER_AUTH_URL=$KEYCLOAK_FRONTEND_URL
+      - PREFERENCES=$PREFERENCES
+    depends_on:
+      - kafka-1
+      - kafka-2
+      - kafka-3
+      - auth
+      - consul
+      - vault
+      - postgres-market
+    networks:
+      - default
+    deploy:
+      restart_policy:
+        condition: on-failure
   api:
     image: ghcr.io/opexdev/api:$TAG
     environment:
@@ -347,6 +375,7 @@ services:
       - kafka-3
       - accountant
       - matching-gateway
+      - market
       - wallet
       - bc-gateway
       - auth
@@ -494,6 +523,7 @@ volumes:
   eventlog-data:
   auth-data:
   wallet-data:
+  market-data:
   api-data:
   bc-gateway-data:
   referral-data:
