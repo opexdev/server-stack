@@ -21,6 +21,7 @@ services:
     depends_on:
       - accountant
       - wallet
+      - market
       - storage
       - admin
       - api

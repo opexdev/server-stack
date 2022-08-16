@@ -74,6 +74,23 @@ services:
       - HEALTHCHECK_PORT=8080
     depends_on:
       - postgres-eventlog
+  market-backup:
+    <<: *backup-service
+    volumes:
+      - market-backup:/backups
+    environment:
+      - POSTGRES_HOST=${POSTGRES_HOST:-postgres-market}
+      - POSTGRES_DB=opex
+      - POSTGRES_USER=${DB_READ_ONLY_USER}
+      - POSTGRES_PASSWORD=${DB_READ_ONLY_PASS}
+      - POSTGRES_EXTRA_OPTS=-Z6 --schema=public --blobs
+      - SCHEDULE=*/30 * * * *
+      - BACKUP_KEEP_DAYS=7
+      - BACKUP_KEEP_WEEKS=4
+      - BACKUP_KEEP_MONTHS=6
+      - HEALTHCHECK_PORT=8080
+    depends_on:
+      - postgres-market
   api-backup:
     <<: *backup-service
     volumes:
@@ -146,6 +163,7 @@ volumes:
   accountant-backup:
   auth-backup:
   wallet-backup:
+  market-backup:
   eventlog-backup:
   api-backup:
   bc-gateway-backup:

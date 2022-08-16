@@ -1,8 +1,8 @@
 version: '3.8'
 services:
-  vault-ui:
+  vault:
     ports:
-      - "8001:8000"
+      - "8001:8200"
   consul:
     ports:
       - "8501:8500"
