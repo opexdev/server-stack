@@ -28,9 +28,11 @@ pipeline {
                     sh 'cp -f $PUBLIC ./opex.dev.crt'
                 }
                 configFileProvider([
-                    configFile(fileId: 'preferences-dev.yml', variable: 'PREFERENCES_YML')
+                    configFile(fileId: 'preferences-dev.yml', variable: 'PREFERENCES_YML'),
+                    configFile(fileId: 'whitelist.txt', variable: 'WHITELIST_TXT')
                 ]) {
                     sh 'cp -f $PREFERENCES_YML ./preferences.yml'
+                    sh 'cp -f $WHITELIST_TXT ./whitelist.txt'
                 }
                 sh 'docker stack deploy \
                         -c docker-stack.yml \
