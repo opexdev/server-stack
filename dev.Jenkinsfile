@@ -34,6 +34,17 @@ pipeline {
                     sh 'cp -f $PREFERENCES_YML ./preferences.yml'
                     sh 'cp -f $WHITELIST_TXT ./whitelist.txt'
                 }
+                script {
+                    try {
+                        configFileProvider([configFile(fileId: 'assets.zip', variable: 'ASSETS_ZIP')]) {
+                            sh 'cp -f $ASSETS_ZIP assets.zip && unzip assets.zip -d .'
+                        }
+                        echo 'Asset unzip successfully'
+                    } catch (Exception e) {
+                        echo 'Could not copy assets file'
+                        echo e.getMessage()
+                    }
+                }
                 sh 'docker stack deploy \
                         -c docker-stack.yml \
                         -c docker-stack.payment.yml \
