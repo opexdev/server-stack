@@ -9,3 +9,4 @@
 *.pem
 .env
 preferences.yml
+whitelist.txt
