@@ -23,6 +23,8 @@ services:
   admin-panel:
     image: ghcr.io/opexdev/admin-panel:$TAG
     environment:
+      - APP_TITLE=$ADMIN_TITLE
+      - DESCRIPTION=$ADMIN_DESCRIPTION
       - API_BASE_URL=$API_BASE_URL
       - FRONT_URL=$ADMIN_FRONT_URL
       - CLIENT_ID=$ADMIN_CLIENT_ID
