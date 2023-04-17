@@ -48,6 +48,8 @@ services:
       - vault
       - postgres-scanner-scheduler
       - bsc-scanner
+    labels:
+      collect_logs: "true"
     networks:
       - default
   ethereum-scanner:
@@ -64,6 +66,8 @@ services:
     depends_on:
       - vault
       - postgres-ethereum-scanner
+    labels:
+      collect_logs: "true"
     networks:
       - default
   bitcoin-scanner:
@@ -81,6 +85,8 @@ services:
     depends_on:
       - vault
       - postgres-bitcoin-scanner
+    labels:
+      collect_logs: "true"
     networks:
       - default
   bsc-scanner:
@@ -97,6 +103,8 @@ services:
     depends_on:
       - vault
       - postgres-bsc-scanner
+    labels:
+      collect_logs: "true"
     networks:
       - default
   tron-scanner:
@@ -114,6 +122,8 @@ services:
     depends_on:
       - vault
       - postgres-tron-scanner
+    labels:
+      collect_logs: "true"
     networks:
       - default
 volumes:

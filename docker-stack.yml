@@ -29,7 +29,7 @@ services:
       restart_policy:
         condition: on-failure
   kafka-1:
-    image: confluentinc/cp-kafka:7.1.1
+    image: ghcr.io/opexdev/kafka:$TAG
     hostname: kafka-1
     volumes:
       - kafka-1:/var/lib/kafka/data
@@ -42,6 +42,7 @@ services:
       - KAFKA_INTER_BROKER_LISTENER_NAME=CLIENT
       - KAFKA_MIN_INSYNC_REPLICAS=1
       - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+      - KAFKA_OPTS=-javaagent:/opt/prometheus/jmx-exporter-0.15.0.jar=1234:/opt/prometheus/kafka-jmx-exporter.yml
     depends_on:
       - zookeeper
     networks:
@@ -50,7 +51,7 @@ services:
       restart_policy:
         condition: on-failure
   kafka-2:
-    image: confluentinc/cp-kafka:7.1.1
+    image: ghcr.io/opexdev/kafka:$TAG
     hostname: kafka-2
     volumes:
       - kafka-2:/var/lib/kafka/data
@@ -63,6 +64,7 @@ services:
       - KAFKA_INTER_BROKER_LISTENER_NAME=CLIENT
       - KAFKA_MIN_INSYNC_REPLICAS=1
       - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+      - KAFKA_OPTS=-javaagent:/opt/prometheus/jmx-exporter-0.15.0.jar=1234:/opt/prometheus/kafka-jmx-exporter.yml
     depends_on:
       - zookeeper
     networks:
@@ -71,7 +73,7 @@ services:
       restart_policy:
         condition: on-failure
   kafka-3:
-    image: confluentinc/cp-kafka:7.1.1
+    image: ghcr.io/opexdev/kafka:$TAG
     hostname: kafka-3
     volumes:
       - kafka-3:/var/lib/kafka/data
@@ -84,6 +86,7 @@ services:
       - KAFKA_INTER_BROKER_LISTENER_NAME=CLIENT
       - KAFKA_MIN_INSYNC_REPLICAS=1
       - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+      - KAFKA_OPTS=-javaagent:/opt/prometheus/jmx-exporter-0.15.0.jar=1234:/opt/prometheus/kafka-jmx-exporter.yml
     depends_on:
       - zookeeper
     networks:
@@ -219,6 +222,8 @@ services:
       - consul
       - vault
       - postgres-accountant
+    labels:
+      collect_logs: "true"
     deploy:
       restart_policy:
         condition: on-failure
@@ -240,6 +245,8 @@ services:
       - consul
       - vault
       - postgres-eventlog
+    labels:
+      collect_logs: "true"
     deploy:
       restart_policy:
         condition: on-failure
@@ -259,6 +266,8 @@ services:
       - kafka-2
       - kafka-3
       - redis
+    labels:
+      collect_logs: "true"
     deploy:
       restart_policy:
         condition: on-failure
@@ -277,6 +286,8 @@ services:
       - auth
       - consul
       - matching-engine
+    labels:
+      collect_logs: "true"
     deploy:
       restart_policy:
         condition: on-failure
@@ -308,6 +319,8 @@ services:
       - consul
       - vault
       - postgres-auth
+    labels:
+      collect_logs: "true"
     networks:
       - default
     deploy:
@@ -334,6 +347,8 @@ services:
       - consul
       - vault
       - postgres-wallet
+    labels:
+      collect_logs: "true"
     networks:
       - default
     deploy:
@@ -358,6 +373,8 @@ services:
       - consul
       - vault
       - postgres-market
+    labels:
+      collect_logs: "true"
     networks:
       - default
     deploy:
@@ -391,6 +408,8 @@ services:
       - consul
       - vault
       - postgres-api
+    labels:
+      collect_logs: "true"
     networks:
       - default
     deploy:
@@ -413,6 +432,8 @@ services:
       - consul
       - vault
       - postgres-api
+    labels:
+      collect_logs: "true"
     networks:
       - default
     deploy:
@@ -440,6 +461,8 @@ services:
       - consul
       - vault
       - postgres-bc-gateway
+    labels:
+      collect_logs: "true"
     networks:
       - default
     deploy:
@@ -457,6 +480,8 @@ services:
     depends_on:
       - auth
       - consul
+    labels:
+      collect_logs: "true"
     networks:
       - default
     deploy:
@@ -481,6 +506,8 @@ services:
       - consul
       - postgres-referral
       - vault
+    labels:
+      collect_logs: "true"
     deploy:
       restart_policy:
         condition: on-failure
@@ -492,6 +519,8 @@ services:
       - SWAGGER_AUTH_URL=$KEYCLOAK_FRONTEND_URL
     depends_on:
       - consul
+    labels:
+      collect_logs: "true"
     deploy:
       restart_policy:
         condition: on-failure
@@ -513,6 +542,8 @@ services:
       - consul
       - auth
       - vault
+    labels:
+      collect_logs: "true"
     networks:
       - default
     deploy:
