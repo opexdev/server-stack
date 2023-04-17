@@ -13,7 +13,7 @@ services:
     networks:
       - default
   logstash:
-    image: ghcr.io/opexdev/opex-logstash
+    image: ghcr.io/opexdev/opex-logstash:$TAG
     environment:
       - LS_JAVA_OPTS=-Xmx256m -Xms256m
       - xpack.monitoring.elasticsearch.url=elasticsearch:9200
@@ -25,7 +25,7 @@ services:
     depends_on:
       - elasticsearch
   filebeat:
-    image: ghcr.io/opexdev/opex-filebeat
+    image: ghcr.io/opexdev/opex-filebeat:$TAG
     user: root
     volumes:
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
@@ -48,7 +48,7 @@ services:
     depends_on:
       - elasticsearch
   prometheus:
-    image: ghcr.io/opexdev/opex-prometheus
+    image: ghcr.io/opexdev/opex-prometheus:$TAG
     restart: unless-stopped
     command:
       - '--config.file=/etc/prometheus/prometheus.yaml'
