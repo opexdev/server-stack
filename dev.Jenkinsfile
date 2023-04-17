@@ -43,7 +43,7 @@ pipeline {
                         -c docker-stack.backup.yml \
                         -c docker-stack.reverse-proxy.yml \
                         -c docker-stack.superset.yml \
-                        -c docker-stack.elastic.yml \
+                        -c docker-stack.monitoring.yml \
                         -c docker-stack.dev.yml \
                            opex-dev'
             }
