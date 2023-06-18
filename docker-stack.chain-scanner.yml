@@ -43,8 +43,8 @@ services:
       collect_logs: "true"
     networks:
       - default
-  liaison:
-    image: ghcr.io/opexdev/liaison:$TAG
+  scanner-liaison:
+    image: ghcr.io/opexdev/scanner-liaison:$TAG
     environment:
       - JAVA_OPTS=-Xmx768m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - DB_IP_PORT=postgres-liaison
