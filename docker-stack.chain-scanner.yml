@@ -18,22 +18,14 @@ services:
     <<: *postgres-db
     volumes:
       - scanner-scheduler-data:/var/lib/postgresql/data/
-  postgres-ethereum-scanner:
+  postgres-liaison:
     <<: *postgres-db
     volumes:
-      - ethereum-scanner-data:/var/lib/postgresql/data/
-  postgres-bitcoin-scanner:
+      - liaison-data:/var/lib/postgresql/data/
+  postgres-scanner:
     <<: *postgres-db
     volumes:
-      - bitcoin-scanner-data:/var/lib/postgresql/data/
-  postgres-bsc-scanner:
-    <<: *postgres-db
-    volumes:
-      - bsc-scanner-data:/var/lib/postgresql/data/
-  postgres-tron-scanner:
-    <<: *postgres-db
-    volumes:
-      - tron-scanner-data:/var/lib/postgresql/data/
+      - scanner-data:/var/lib/postgresql/data/
   scanner-scheduler:
     image: ghcr.io/opexdev/scanner-scheduler:$TAG
     environment:
@@ -47,16 +39,30 @@ services:
     depends_on:
       - vault
       - postgres-scanner-scheduler
-      - bsc-scanner
     labels:
       collect_logs: "true"
+    networks:
+      - default
+  scanner-liaison:
+    image: ghcr.io/opexdev/scanner-liaison:$TAG
+    environment:
+      - JAVA_OPTS=-Xmx768m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      - DB_IP_PORT=postgres-liaison
+      - PREFERENCES=$PREFERENCES
+      - BACKEND_USER=${BACKEND_USER}
+      - VAULT_HOST=vault
+    configs:
+      - preferences.yml
+    depends_on:
+      - vault
+      - postgres-liaison
     networks:
       - default
   ethereum-scanner:
     image: ghcr.io/opexdev/ethereum-scanner:$TAG
     environment:
       - JAVA_OPTS=-Xmx768m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
-      - DB_IP_PORT=postgres-ethereum-scanner
+      - DB_IP_PORT=postgres-scanner
       - RPC_ENDPOINT=${ETH_RPC_ENDPOINT}
       - PREFERENCES=$PREFERENCES
       - BACKEND_USER=${BACKEND_USER}
@@ -65,7 +71,7 @@ services:
       - preferences.yml
     depends_on:
       - vault
-      - postgres-ethereum-scanner
+      - postgres-scanner
     labels:
       collect_logs: "true"
     networks:
@@ -74,7 +80,7 @@ services:
     image: ghcr.io/opexdev/bitcoin-scanner:$TAG
     environment:
       - JAVA_OPTS=-Xmx768m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
-      - DB_IP_PORT=postgres-bitcoin-scanner
+      - DB_IP_PORT=postgres-scanner
       - REST_ENDPOINT=${BITCOIN_REST_ENDPOINT}
       - API_KEY=${BITCOIN_API_KEY}
       - PREFERENCES=$PREFERENCES
@@ -84,7 +90,7 @@ services:
       - preferences.yml
     depends_on:
       - vault
-      - postgres-bitcoin-scanner
+      - postgres-scanner
     labels:
       collect_logs: "true"
     networks:
@@ -93,7 +99,7 @@ services:
     image: ghcr.io/opexdev/ethereum-scanner:$TAG
     environment:
       - JAVA_OPTS=-Xmx768m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
-      - DB_IP_PORT=postgres-bsc-scanner
+      - DB_IP_PORT=postgres-scanner
       - RPC_ENDPOINT=${BSC_RPC_ENDPOINT}
       - PREFERENCES=$PREFERENCES
       - BACKEND_USER=${BACKEND_USER}
@@ -102,7 +108,7 @@ services:
       - preferences.yml
     depends_on:
       - vault
-      - postgres-bsc-scanner
+      - postgres-scanner
     labels:
       collect_logs: "true"
     networks:
@@ -111,7 +117,7 @@ services:
     image: ghcr.io/opexdev/tron-scanner:$TAG
     environment:
       - JAVA_OPTS=-Xmx768m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
-      - DB_IP_PORT=postgres-tron-scanner
+      - DB_IP_PORT=postgres-scanner
       - REST_ENDPOINT=${TRON_REST_ENDPOINT}
       - API_KEY=${TRON_API_KEY}
       - PREFERENCES=$PREFERENCES
@@ -121,14 +127,12 @@ services:
       - preferences.yml
     depends_on:
       - vault
-      - postgres-tron-scanner
+      - postgres-scanner
     labels:
       collect_logs: "true"
     networks:
       - default
 volumes:
   scanner-scheduler-data:
-  ethereum-scanner-data:
-  bitcoin-scanner-data:
-  bsc-scanner-data:
-  tron-scanner-data:
+  liaison-data:
+  scanner-data:
