@@ -145,7 +145,7 @@ services:
       restart_policy:
         condition: on-failure
   consul:
-    image: consul
+    image: consul:1.14.8
     environment:
       - CONSUL_BIND_INTERFACE=eth0
     networks:
