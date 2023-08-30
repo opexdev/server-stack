@@ -42,7 +42,7 @@ services:
       - KAFKA_INTER_BROKER_LISTENER_NAME=CLIENT
       - KAFKA_MIN_INSYNC_REPLICAS=1
       - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
-      - KAFKA_OPTS=-javaagent:/opt/prometheus/jmx-exporter-0.20.0.jar=1234:/opt/prometheus/kafka-jmx-exporter.yml
+      - KAFKA_OPTS=-javaagent:/opt/prometheus/jmx-exporter.jar=1234:/opt/prometheus/kafka-jmx-exporter.yml
     depends_on:
       - zookeeper
     networks:
@@ -64,7 +64,7 @@ services:
       - KAFKA_INTER_BROKER_LISTENER_NAME=CLIENT
       - KAFKA_MIN_INSYNC_REPLICAS=1
       - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
-      - KAFKA_OPTS=-javaagent:/opt/prometheus/jmx-exporter-0.20.0.jar=1234:/opt/prometheus/kafka-jmx-exporter.yml
+      - KAFKA_OPTS=-javaagent:/opt/prometheus/jmx-exporter.jar=1234:/opt/prometheus/kafka-jmx-exporter.yml
     depends_on:
       - zookeeper
     networks:
@@ -86,7 +86,7 @@ services:
       - KAFKA_INTER_BROKER_LISTENER_NAME=CLIENT
       - KAFKA_MIN_INSYNC_REPLICAS=1
       - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
-      - KAFKA_OPTS=-javaagent:/opt/prometheus/jmx-exporter-0.20.0.jar=1234:/opt/prometheus/kafka-jmx-exporter.yml
+      - KAFKA_OPTS=-javaagent:/opt/prometheus/jmx-exporter.jar=1234:/opt/prometheus/kafka-jmx-exporter.yml
     depends_on:
       - zookeeper
     networks:
