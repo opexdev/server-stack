@@ -40,9 +40,7 @@ pipeline {
                         -c docker-stack.chain-scanner.yml \
                         -c docker-stack.chain-scanner-dev.yml \
                         -c docker-stack.ui.yml \
-                        -c docker-stack.backup.yml \
                         -c docker-stack.reverse-proxy.yml \
-                        -c docker-stack.superset.yml \
                         -c docker-stack.monitoring.yml \
                         -c docker-stack.dev.yml \
                            opex-dev'
