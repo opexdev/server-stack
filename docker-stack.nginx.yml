@@ -40,7 +40,5 @@ volumes:
 
 networks:
   opex-dev:
-    driver: overlay
-    attachable: true
-    driver_opts:
-      encrypted: 'yes'
+    external:
+      name: opex-dev

@@ -131,6 +131,8 @@ services:
       - VANDAR_API_KEY=$VANDAR_API_KEY
     cap_add:
       - IPC_LOCK
+    networks:
+      - opex-dev
     deploy:
       restart_policy:
         condition: on-failure
@@ -141,6 +143,8 @@ services:
       - VAULT_AUTH_DEFAULT=USERNAMEPASSWORD
     depends_on:
       - vault
+    networks:
+      - opex-dev
     deploy:
       restart_policy:
         condition: on-failure
@@ -508,6 +512,8 @@ services:
       - vault
     labels:
       collect_logs: "true"
+    networks:
+      - opex-dev
     deploy:
       restart_policy:
         condition: on-failure
@@ -519,6 +525,8 @@ services:
       - SWAGGER_AUTH_URL=$KEYCLOAK_FRONTEND_URL
     depends_on:
       - consul
+    networks:
+      - opex-dev
     labels:
       collect_logs: "true"
     deploy:
@@ -570,10 +578,8 @@ volumes:
   admin-data:
 networks:
   opex-dev:
-    driver: overlay
-    attachable: true
-    driver_opts:
-      encrypted: 'yes'
+    external:
+      name: opex-dev
 secrets:
   opex_dev_crt:
     file: opex.dev.crt
