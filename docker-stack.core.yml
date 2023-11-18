@@ -580,11 +580,6 @@ networks:
   opex-dev:
     external:
       name: opex-dev
-secrets:
-  opex_dev_crt:
-    file: opex.dev.crt
-  private_pem:
-    file: private.pem
 configs:
   preferences.yml:
     file: preferences.yml
