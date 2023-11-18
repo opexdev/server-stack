@@ -8,18 +8,18 @@ pipeline {
             environment {
                 TAG = 'dev'
                 PREFERENCES = "preferences.yml"
-                PANEL_PASS = credentials("v-panel-secret-dev")
-                BACKEND_USER = credentials("v-backend-secret-dev")
-                SMTP_PASS = credentials("smtp-secret-dev")
+                PANEL_PASS = credentials("opex-dev-v-panel-secret")
+                BACKEND_USER = credentials("opex-dev-v-backend-secret")
+                SMTP_PASS = credentials("opex-dev-smtp-secret")
                 DB_USER = 'opex'
-                DB_PASS = credentials("db-secret-dev")
+                DB_PASS = credentials("opex-dev-db-secret")
                 DB_READ_ONLY_USER = 'opex_reader'
-                DB_READ_ONLY_PASS = credentials("db-reader-secret-dev")
-                KEYCLOAK_ADMIN_USERNAME = credentials("keycloak-admin-username-dev")
-                KEYCLOAK_ADMIN_PASSWORD = credentials("keycloak-admin-password-dev")
-                OPEX_ADMIN_KEYCLOAK_CLIENT_SECRET = credentials("opex-admin-keycloak-client-secret-dev")
-                VANDAR_API_KEY = credentials("vandar-api-key-dev")
-                FILEBEAT_API_KEY = credentials("filebeat-api-key-dev")
+                DB_READ_ONLY_PASS = credentials("opex-dev-db-reader-secret")
+                KEYCLOAK_ADMIN_USERNAME = credentials("opex-dev-keycloak-admin-username")
+                KEYCLOAK_ADMIN_PASSWORD = credentials("opex-dev-keycloak-admin-password")
+                OPEX_ADMIN_KEYCLOAK_CLIENT_SECRET = credentials("opex-dev-opex-admin-keycloak-client-secret")
+                //VANDAR_API_KEY = credentials("vandar-api-key")
+                //FILEBEAT_API_KEY = credentials("filebeat-api-key")
             }
             steps {
                 withCredentials([
@@ -38,8 +38,6 @@ pipeline {
                 }
                 sh 'docker stack deploy \
                         -c docker-stack.yml \
-                        -c docker-stack.backup.yml \
-                        -c docker-stack.reverse-proxy.yml \
                         -c docker-stack.dev.yml \
                            opex-dev'
             }

@@ -20,7 +20,7 @@ services:
     ports:
       - "$EXPOSED_PORT:443"
     networks:
-      - default
+      - opex-dev
     depends_on:
       - accountant
       - wallet
@@ -37,3 +37,10 @@ services:
         condition: on-failure
 volumes:
   www:
+
+networks:
+  opex-dev:
+    driver: overlay
+    attachable: true
+    driver_opts:
+      encrypted: 'yes'

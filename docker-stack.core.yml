@@ -7,7 +7,7 @@ x-postgres-db: &postgres-db
     - POSTGRES_READ_ONLY_USER=${DB_READ_ONLY_USER:-opex_reader}
     - POSTGRES_READ_ONLY_PASSWORD=${DB_READ_ONLY_PASS:-hiopex}
   networks:
-    - default
+    - opex-dev
   deploy:
     restart_policy:
       condition: on-failure
@@ -24,7 +24,7 @@ services:
       - ALLOW_ANONYMOUS_LOGIN=yes
       - ZOOKEEPER_CLIENT_PORT=2181
     networks:
-      - default
+      - opex-dev
     deploy:
       restart_policy:
         condition: on-failure
@@ -46,7 +46,7 @@ services:
     depends_on:
       - zookeeper
     networks:
-      - default
+      - opex-dev
     deploy:
       restart_policy:
         condition: on-failure
@@ -68,7 +68,7 @@ services:
     depends_on:
       - zookeeper
     networks:
-      - default
+      - opex-dev
     deploy:
       restart_policy:
         condition: on-failure
@@ -90,7 +90,7 @@ services:
     depends_on:
       - zookeeper
     networks:
-      - default
+      - opex-dev
     deploy:
       restart_policy:
         condition: on-failure
@@ -104,7 +104,7 @@ services:
               properties:
                 bootstrap.servers: "kafka-1:29092,kafka-2:29092,kafka-3:29092"
     networks:
-      - default
+      - opex-dev
     depends_on:
       - kafka-1
       - kafka-2
@@ -149,7 +149,7 @@ services:
     environment:
       - CONSUL_BIND_INTERFACE=eth0
     networks:
-      - default
+      - opex-dev
     deploy:
       restart_policy:
         condition: on-failure
@@ -162,7 +162,7 @@ services:
     environment:
       - REDIS_REPLICATION_MODE=master
     networks:
-      - default
+      - opex-dev
     deploy:
       restart_policy:
         condition: on-failure
@@ -213,7 +213,7 @@ services:
     configs:
       - preferences.yml
     networks:
-      - default
+      - opex-dev
     depends_on:
       - kafka-1
       - kafka-2
@@ -237,7 +237,7 @@ services:
       - BACKEND_USER=${BACKEND_USER}
       - VAULT_HOST=vault
     networks:
-      - default
+      - opex-dev
     depends_on:
       - kafka-1
       - kafka-2
@@ -260,7 +260,7 @@ services:
     configs:
       - preferences.yml
     networks:
-      - default
+      - opex-dev
     depends_on:
       - kafka-1
       - kafka-2
@@ -278,7 +278,7 @@ services:
       - KAFKA_IP_PORT=kafka-1:29092,kafka-2:29092,kafka-3:29092
       - CONSUL_HOST=consul
     networks:
-      - default
+      - opex-dev
     depends_on:
       - kafka-1
       - kafka-2
@@ -322,7 +322,7 @@ services:
     labels:
       collect_logs: "true"
     networks:
-      - default
+      - opex-dev
     deploy:
       restart_policy:
         condition: on-failure
@@ -350,7 +350,7 @@ services:
     labels:
       collect_logs: "true"
     networks:
-      - default
+      - opex-dev
     deploy:
       restart_policy:
         condition: on-failure
@@ -376,7 +376,7 @@ services:
     labels:
       collect_logs: "true"
     networks:
-      - default
+      - opex-dev
     deploy:
       restart_policy:
         condition: on-failure
@@ -411,7 +411,7 @@ services:
     labels:
       collect_logs: "true"
     networks:
-      - default
+      - opex-dev
     deploy:
       restart_policy:
         condition: on-failure
@@ -435,7 +435,7 @@ services:
     labels:
       collect_logs: "true"
     networks:
-      - default
+      - opex-dev
     deploy:
       restart_policy:
         condition: on-failure
@@ -464,7 +464,7 @@ services:
     labels:
       collect_logs: "true"
     networks:
-      - default
+      - opex-dev
     deploy:
       restart_policy:
         condition: on-failure
@@ -483,7 +483,7 @@ services:
     labels:
       collect_logs: "true"
     networks:
-      - default
+      - opex-dev
     deploy:
       restart_policy:
         condition: on-failure
@@ -545,7 +545,7 @@ services:
     labels:
       collect_logs: "true"
     networks:
-      - default
+      - opex-dev
     deploy:
       restart_policy:
         condition: on-failure
@@ -569,7 +569,7 @@ volumes:
   storage-data:
   admin-data:
 networks:
-  default:
+  opex-dev:
     driver: overlay
     attachable: true
     driver_opts:
