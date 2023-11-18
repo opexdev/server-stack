@@ -19,6 +19,13 @@ pipeline {
     stages {
         stage('Deploy Swarm') {
             steps {
+                withCredentials([
+                    file(credentialsId: 'private.pem', variable: 'PRIVATE'),
+                    file(credentialsId: 'opex.dev.crt', variable: 'PUBLIC')
+                ]) {
+                    sh 'cp -f $PRIVATE ./private.pem'
+                    sh 'cp -f $PUBLIC ./opex.dev.crt'
+                }
                 sh "docker stack deploy -c docker-stack.nginx.yml opex-dev-nginx"
             }
         }

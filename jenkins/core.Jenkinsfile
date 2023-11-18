@@ -22,13 +22,6 @@ pipeline {
                 //FILEBEAT_API_KEY = credentials("filebeat-api-key")
             }
             steps {
-                withCredentials([
-                    file(credentialsId: 'private.pem', variable: 'PRIVATE'),
-                    file(credentialsId: 'opex.dev.crt', variable: 'PUBLIC')
-                ]) {
-                    sh 'cp -f $PRIVATE ./private.pem'
-                    sh 'cp -f $PUBLIC ./opex.dev.crt'
-                }
                 configFileProvider([
                     configFile(fileId: 'preferences-dev.yml', variable: 'PREFERENCES_YML'),
                     configFile(fileId: 'whitelist.txt', variable: 'WHITELIST_TXT')
