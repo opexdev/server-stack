@@ -1,0 +1,266 @@
+x-postgres-db: &postgres-db
+  image: registry.opex.dev/repository/dockernilin-repo/postgres-opex:$TAG
+  environment:
+    - POSTGRES_USER=${DB_USER:-opex}
+    - POSTGRES_PASSWORD=${DB_PASS:-hiopex}
+    - POSTGRES_DB=${DB_USER:-opex}
+    - POSTGRES_READ_ONLY_USER=${DB_READ_ONLY_USER:-opex_reader}
+    - POSTGRES_READ_ONLY_PASSWORD=${DB_READ_ONLY_PASS:-hiopex}
+  networks:
+    - opex-dev
+  deploy:
+    restart_policy:
+      condition: on-failure
+
+version: '3.8'
+services:
+  redis-config:
+    image: redis/redis-stack:latest
+    volumes:
+      - redis-config-data:/data
+    environment:
+      - REDIS_REPLICATION_MODE=master
+      - REDIS_ARGS= --save 20 1
+    networks:
+      - default
+    deploy:
+      restart_policy:
+        condition: on-failure
+  postgres-bc-gateway:
+    <<: *postgres-db
+    volumes:
+      - bc-gateway-data:/var/lib/postgresql/data/
+  postgres-referral:
+    <<: *postgres-db
+    volumes:
+      - referral-data:/var/lib/postgresql/data/
+  postgres-profile:
+    <<: *postgres-db
+    volumes:
+      - profile-data:/var/lib/postgresql/data/
+  postgres-kyc:
+    <<: *postgres-db
+    volumes:
+      - kyc-data:/var/lib/postgresql/data/
+  websocket:
+    image: registry.opex.dev/repository/dockernilin-repo/websocket:$TAG
+    environment:
+      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      - KAFKA_IP_PORT=kafka-1:29092,kafka-2:29092,kafka-3:29092
+      - CONSUL_HOST=consul
+      - DB_IP_PORT=postgres-api
+      - BACKEND_USER=${BACKEND_USER}
+      - VAULT_HOST=vault
+    depends_on:
+      - kafka-1
+      - kafka-2
+      - kafka-3
+      - auth
+      - consul
+      - vault
+      - postgres-api
+    labels:
+      collect_logs: "true"
+    networks:
+      - opex-dev
+    deploy:
+      restart_policy:
+        condition: on-failure
+  bc-gateway:
+    image: registry.opex.dev/repository/dockernilin-repo/bc-gateway:$TAG
+    environment:
+      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      - CONSUL_HOST=consul
+      - KAFKA_IP_PORT=kafka-1:29092,kafka-2:29092,kafka-3:29092
+      - DB_IP_PORT=postgres-bc-gateway
+      - BACKEND_USER=${BACKEND_USER}
+      - VAULT_HOST=vault
+      - SWAGGER_AUTH_URL=$KEYCLOAK_FRONTEND_URL
+      - PREFERENCES=$PREFERENCES
+    configs:
+      - preferences.yml
+    depends_on:
+      - kafka-1
+      - kafka-2
+      - kafka-3
+      - auth
+      - wallet
+      - consul
+      - vault
+      - postgres-bc-gateway
+    labels:
+      collect_logs: "true"
+    networks:
+      - opex-dev
+    deploy:
+      restart_policy:
+        condition: on-failure
+  storage:
+    image: registry.opex.dev/repository/dockernilin-repo/storage:$TAG
+    environment:
+      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      - CONSUL_HOST=consul
+      - ROOT_DIR=/storage
+      - SWAGGER_AUTH_URL=$KEYCLOAK_FRONTEND_URL
+    volumes:
+      - storage-data:/storage
+    depends_on:
+      - auth
+      - consul
+    labels:
+      collect_logs: "true"
+    networks:
+      - opex-dev
+    deploy:
+      restart_policy:
+        condition: on-failure
+  referral:
+    image: registry.opex.dev/repository/dockernilin-repo/referral:$TAG
+    environment:
+      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=1044
+      - CONSUL_HOST=consul
+      - DB_IP_PORT=postgres-referral
+      - KAFKA_IP_PORT=kafka-1:29092,kafka-2:29092,kafka-3:29092
+      - BACKEND_USER=${BACKEND_USER}
+      - VAULT_HOST=vault
+      - SWAGGER_AUTH_URL=$KEYCLOAK_FRONTEND_URL
+    depends_on:
+      - auth
+      - accountant
+      - kafka-1
+      - kafka-2
+      - kafka-3
+      - consul
+      - postgres-referral
+      - vault
+    labels:
+      collect_logs: "true"
+    networks:
+      - opex-dev
+    deploy:
+      restart_policy:
+        condition: on-failure
+  profile:
+    image: registry.opex.dev/repository/dockernilin-repo/profile
+    environment:
+      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=1044
+      - CONSUL_HOST=consul
+      - DB_IP_PORT=postgres-profile
+      - KAFKA_IP_PORT=kafka-1:29092,kafka-2:29092,kafka-3:29092
+      - BACKEND_USER=${BACKEND_USER}
+      - VAULT_HOST=vault
+      - SWAGGER_AUTH_URL=$KEYCLOAK_FRONTEND_URL
+    depends_on:
+      - auth
+      - kafka-1
+      - kafka-2
+      - kafka-3
+      - consul
+      - postgres-profile
+      - vault
+    labels:
+      collect_logs: "true"
+    networks:
+      - opex-dev
+    deploy:
+      restart_policy:
+        condition: on-failure
+  kyc:
+    image: registry.opex.dev/repository/dockernilin-repo/kyc
+    environment:
+      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=1044
+      - CONSUL_HOST=consul
+      - DB_IP_PORT=postgres-kyc
+      - KAFKA_IP_PORT=kafka-1:29092,kafka-2:29092,kafka-3:29092
+      - BACKEND_USER=${BACKEND_USER}
+      - VAULT_HOST=vault
+      - SWAGGER_AUTH_URL=$KEYCLOAK_FRONTEND_URL
+    depends_on:
+      - auth
+      - kafka-1
+      - kafka-2
+      - kafka-3
+      - consul
+      - postgres-kyc
+      - vault
+    labels:
+      collect_logs: "true"
+    networks:
+      - opex-dev
+    deploy:
+      restart_policy:
+        condition: on-failure
+  captcha:
+    image: registry.opex.dev/repository/dockernilin-repo/captcha:$TAG
+    environment:
+      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=1044
+      - CONSUL_HOST=consul
+      - SWAGGER_AUTH_URL=$KEYCLOAK_FRONTEND_URL
+    depends_on:
+      - consul
+    networks:
+      - opex-dev
+    labels:
+      collect_logs: "true"
+    deploy:
+      restart_policy:
+        condition: on-failure
+  admin:
+    image: registry.opex.dev/repository/dockernilin-repo/admin:$TAG
+    environment:
+      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      - KAFKA_IP_PORT=kafka-1:29092,kafka-2:29092,kafka-3:29092
+      - CONSUL_HOST=consul
+      - VAULT_HOST=vault
+      - BACKEND_USER=${BACKEND_USER}
+      - SWAGGER_AUTH_URL=$KEYCLOAK_FRONTEND_URL
+    volumes:
+      - admin-data:/admin
+    depends_on:
+      - kafka-1
+      - kafka-2
+      - kafka-3
+      - consul
+      - auth
+      - vault
+    labels:
+      collect_logs: "true"
+    networks:
+      - opex-dev
+    deploy:
+      restart_policy:
+        condition: on-failure
+  config:
+    image: registry.opex.dev/repository/dockernilin-repo/config
+    environment:
+      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      - REDIS_HOST=redis-config
+      - CONSUL_HOST=consul
+      - PREFERENCES=$PREFERENCES
+    configs:
+      - preferences.yml
+    depends_on:
+      - consul
+      - redis-config
+    networks:
+      - opex-dev
+    labels:
+      collect_logs: "true"
+    deploy:
+      restart_policy:
+        condition: on-failure
+volumes:
+  redis-config-data:
+  bc-gateway-data:
+  referral-data:
+  storage-data:
+  admin-data:
+  profile-data:
+  kyc-data:
+networks:
+  opex-dev:
+    external:
+      name: opex-dev
+configs:
+  preferences.yml:
+    file: preferences.yml
