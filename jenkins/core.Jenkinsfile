@@ -21,15 +21,17 @@ pipeline {
     }
 
     stages {
+        stage('Copy config files') {
+            configFileProvider([
+                configFile(fileId: 'preferences-dev.yml', variable: 'PREFERENCES_YML'),
+                configFile(fileId: 'whitelist.txt', variable: 'WHITELIST_TXT')
+            ]) {
+                sh 'cp -f $PREFERENCES_YML ./preferences.yml'
+                sh 'cp -f $WHITELIST_TXT ./whitelist.txt'
+            }
+        }
         stage('Deploy Swarm') {
             steps {
-                configFileProvider([
-                    configFile(fileId: 'preferences-dev.yml', variable: 'PREFERENCES_YML'),
-                    configFile(fileId: 'whitelist.txt', variable: 'WHITELIST_TXT')
-                ]) {
-                    sh 'cp -f $PREFERENCES_YML ./preferences.yml'
-                    sh 'cp -f $WHITELIST_TXT ./whitelist.txt'
-                }
                 sh 'docker stack deploy \
                         -c docker-stack.core.yml \
                         -c docker-stack.core-dev.yml \
