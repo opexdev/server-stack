@@ -6,7 +6,6 @@ pipeline {
     stages {
         stage('Docker Login') {
             environment {
-                TAG = getTagEnvForBranch()
                 REGISTRY_CREDS = credentials('docker-registry')
             }
             steps {
