@@ -1,0 +1,75 @@
+version: '3.8'
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.6.2
+    environment:
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+      - discovery.type=single-node
+      - node.name=elasticsearch
+      - network.publish_host=elasticsearch
+      - xpack.security.enabled=true
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - opex-dev
+  logstash:
+    image: registry.opex.dev/repository/dockernilin-repo/opex-logstash
+    environment:
+      - LS_JAVA_OPTS=-Xmx256m -Xms256m
+      - xpack.monitoring.elasticsearch.url=elasticsearch:9200
+      - xpack.monitoring.elasticsearch.username=${LOGSTASH_ELASTIC_USER}
+      - xpack.monitoring.elasticsearch.password=${LOGSTASH_ELASTIC_PASSWORD}
+      - ELASTIC_USER=${LOGSTASH_ELASTIC_USER}
+      - ELASTIC_PASSWORD=${LOGSTASH_ELASTIC_PASSWORD}
+    restart: on-failure
+    networks:
+      - opex-dev
+    depends_on:
+      - elasticsearch
+  filebeat:
+    image: registry.opex.dev/repository/dockernilin-repo/opex-filebeat
+    user: root
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - logstash
+    networks:
+      - opex-dev
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.6.2
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=${KIBANA_ELASTIC_USER}
+      - ELASTICSEARCH_PASSWORD=${KIBANA_ELASTIC_PASSWORD}
+      - XPACK_MONITORING_ENABLED=true
+      - XPACK_MONITORING_COLLECTION_ENABLED=true
+      - XPACK_SECURITY_ENABLED=true
+    networks:
+      - opex-dev
+    depends_on:
+      - elasticsearch
+  prometheus:
+    image: registry.opex.dev/repository/dockernilin-repo/opex-prometheus
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yaml'
+    networks:
+      - opex-dev
+  grafana:
+    image: grafana/grafana-oss:8.5.2
+    restart: unless-stopped
+    volumes:
+      - grafana-data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+      - GF_SERVER_DOMAIN=localhost
+    networks:
+      - opex-dev
+volumes:
+  elasticsearch-data:
+  grafana-data:
+networks:
+  opex-dev:
+    external:
+      name: opex-dev
