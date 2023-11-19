@@ -5,6 +5,10 @@ pipeline {
 
     stages {
         stage('Docker Login') {
+            environment {
+                TAG = getTagEnvForBranch()
+                REGISTRY_CREDS = credentials('docker-registry')
+            }
             steps {
                 echo "${env.OPEX_DOCKER_REGISTRY}"
                 sh "docker login -u $REGISTRY_CREDS_USR -p $REGISTRY_CREDS_PSW ${env.OPEX_DOCKER_REGISTRY}"
