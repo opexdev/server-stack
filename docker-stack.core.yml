@@ -194,14 +194,6 @@ services:
     <<: *postgres-db
     volumes:
       - api-data:/var/lib/postgresql/data/
-  postgres-bc-gateway:
-    <<: *postgres-db
-    volumes:
-      - bc-gateway-data:/var/lib/postgresql/data/
-  postgres-referral:
-    <<: *postgres-db
-    volumes:
-      - referral-data:/var/lib/postgresql/data/
   accountant:
     image: ghcr.io/opexdev/accountant:$TAG
     environment:
