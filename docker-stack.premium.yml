@@ -22,7 +22,7 @@ services:
       - REDIS_REPLICATION_MODE=master
       - REDIS_ARGS= --save 20 1
     networks:
-      - default
+      - opex-dev
     deploy:
       restart_policy:
         condition: on-failure
