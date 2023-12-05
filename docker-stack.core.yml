@@ -308,7 +308,6 @@ services:
       - WHITELIST_LOGIN_ENABLED=$WHITELIST_LOGIN_ENABLED
     configs:
       - preferences.yml
-      - whitelist.txt
     depends_on:
       - captcha
       - kafka-1
@@ -435,5 +434,3 @@ networks:
 configs:
   preferences.yml:
     file: preferences.yml
-  whitelist.txt:
-    file: whitelist.txt

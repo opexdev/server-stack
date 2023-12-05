@@ -24,11 +24,9 @@ pipeline {
         stage('Copy config files') {
             steps {
                 configFileProvider([
-                    configFile(fileId: 'preferences-dev.yml', variable: 'PREFERENCES_YML'),
-                    configFile(fileId: 'whitelist.txt', variable: 'WHITELIST_TXT')
+                    configFile(fileId: 'preferences-dev.yml', variable: 'PREFERENCES_YML')
                 ]) {
                     sh 'cp -f $PREFERENCES_YML ./preferences.yml'
-                    sh 'cp -f $WHITELIST_TXT ./whitelist.txt'
                 }
             }
         }
