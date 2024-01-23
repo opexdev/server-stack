@@ -26,10 +26,6 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
-  postgres-bc-gateway:
-    <<: *postgres-db
-    volumes:
-      - bc-gateway-data:/var/lib/postgresql/data/
   postgres-referral:
     <<: *postgres-db
     volumes:
@@ -59,35 +55,6 @@ services:
       - consul
       - vault
       - postgres-api
-    labels:
-      collect_logs: "true"
-    networks:
-      - opex-dev
-    deploy:
-      restart_policy:
-        condition: on-failure
-  bc-gateway:
-    image: registry.opex.dev/repository/dockernilin-repo/bc-gateway:$TAG
-    environment:
-      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
-      - CONSUL_HOST=consul
-      - KAFKA_IP_PORT=kafka-1:29092,kafka-2:29092,kafka-3:29092
-      - DB_IP_PORT=postgres-bc-gateway
-      - BACKEND_USER=${BACKEND_USER}
-      - VAULT_HOST=vault
-      - SWAGGER_AUTH_URL=$KEYCLOAK_FRONTEND_URL
-      - PREFERENCES=$PREFERENCES
-    configs:
-      - preferences.yml
-    depends_on:
-      - kafka-1
-      - kafka-2
-      - kafka-3
-      - auth
-      - wallet
-      - consul
-      - vault
-      - postgres-bc-gateway
     labels:
       collect_logs: "true"
     networks:
@@ -251,7 +218,6 @@ services:
         condition: on-failure
 volumes:
   redis-config-data:
-  bc-gateway-data:
   referral-data:
   storage-data:
   admin-data:

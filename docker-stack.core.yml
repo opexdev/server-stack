@@ -194,6 +194,10 @@ services:
     <<: *postgres-db
     volumes:
       - api-data:/var/lib/postgresql/data/
+  postgres-bc-gateway:
+    <<: *postgres-db
+    volumes:
+      - bc-gateway-data:/var/lib/postgresql/data/
   accountant:
     image: ghcr.io/opexdev/accountant:$TAG
     environment:
@@ -412,6 +416,35 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
+  bc-gateway:
+    image: ghcr.io/opexdev/bc-gateway:$TAG
+    environment:
+      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      - CONSUL_HOST=consul
+      - KAFKA_IP_PORT=kafka-1:29092,kafka-2:29092,kafka-3:29092
+      - DB_IP_PORT=postgres-bc-gateway
+      - BACKEND_USER=${BACKEND_USER}
+      - VAULT_HOST=vault
+      - SWAGGER_AUTH_URL=$KEYCLOAK_FRONTEND_URL
+      - PREFERENCES=$PREFERENCES
+    configs:
+      - preferences.yml
+    depends_on:
+      - kafka-1
+      - kafka-2
+      - kafka-3
+      - auth
+      - wallet
+      - consul
+      - vault
+      - postgres-bc-gateway
+    labels:
+      collect_logs: "true"
+    networks:
+      - opex-dev
+    deploy:
+      restart_policy:
+        condition: on-failure
 volumes:
   zookeeper-data:
   zookeeper-log:
@@ -427,6 +460,7 @@ volumes:
   wallet-data:
   market-data:
   api-data:
+  bc-gateway-data:
 networks:
   opex-dev:
     external:
