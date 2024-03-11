@@ -36,6 +36,15 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
+  nginx-exporter:
+    image: nginx/nginx-prometheus-exporter:1.1.0
+    ports:
+      - "9113:9113"
+    command: --nginx.scrape-uri=http://nginx:443/metrics --web.telemetry-path=/metrics
+    networks:
+      - opex-dev
+    depends_on:
+      - nginx
 volumes:
   www:
 networks:
