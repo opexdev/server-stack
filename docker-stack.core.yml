@@ -170,6 +170,17 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
+  redis-cache:
+    image: redis/redis-stack:latest
+    volumes:
+      - redis-cache-data:/data
+    environment:
+      - REDIS_REPLICATION_MODE=master
+    networks:
+      - opex-dev
+    deploy:
+      restart_policy:
+        condition: on-failure
   postgres-accountant:
     <<: *postgres-db
     volumes:
@@ -455,6 +466,7 @@ volumes:
   vault-data:
   redis-data:
   redis.conf:
+  redis-cache-data:
   accountant-data:
   eventlog-data:
   auth-data:
