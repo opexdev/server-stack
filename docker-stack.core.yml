@@ -170,6 +170,19 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
+  redis-duo:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - redis-duo-data:/data
+      - redis-duo.conf:/usr/local/etc/redis/redis.conf
+    environment:
+      - REDIS_REPLICATION_MODE=master
+    networks:
+      - opex-dev
+    deploy:
+      restart_policy:
+        condition: on-failure
   redis-cache:
     image: redis/redis-stack:latest
     volumes:
@@ -267,6 +280,7 @@ services:
       - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
       - KAFKA_IP_PORT=kafka-1:29092,kafka-2:29092,kafka-3:29092
       - REDIS_HOST=redis
+      - SYMBOLS=${MATCHING_SYMBOLS}
       - PREFERENCES=$PREFERENCES
     configs:
       - preferences.yml
@@ -277,6 +291,28 @@ services:
       - kafka-2
       - kafka-3
       - redis
+    labels:
+      collect_logs: "true"
+    deploy:
+      restart_policy:
+        condition: on-failure
+  matching-engine-duo:
+    image: ghcr.io/opexdev/matching-engine:$TAG
+    environment:
+      - JAVA_OPTS=-Xmx256m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      - KAFKA_IP_PORT=kafka-1:29092,kafka-2:29092,kafka-3:29092
+      - REDIS_HOST=redis-duo
+      - SYMBOLS=${MATCHING_DUO_SYMBOLS}
+      - PREFERENCES=$PREFERENCES
+    configs:
+      - preferences.yml
+    networks:
+      - opex-dev
+    depends_on:
+      - kafka-1
+      - kafka-2
+      - kafka-3
+      - redis-duo
     labels:
       collect_logs: "true"
     deploy:
@@ -466,6 +502,8 @@ volumes:
   vault-data:
   redis-data:
   redis.conf:
+  redis-duo-data:
+  redis-duo.conf:
   redis-cache-data:
   accountant-data:
   eventlog-data:
