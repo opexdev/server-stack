@@ -54,6 +54,8 @@ services:
     restart: unless-stopped
     command:
       - '--config.file=/etc/prometheus/prometheus.yaml'
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       - opex-dev
   grafana:
